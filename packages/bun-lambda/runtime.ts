@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import type { Server, ServerWebSocket } from 'bun';
 import { AwsClient } from 'aws4fetch';
 
@@ -144,16 +145,16 @@ async function throwError(type: string, cause: unknown): Promise<never> {
 
 async function init(): Promise<Lambda> {
   const handlerName = env('_HANDLER');
-  console.log(handlerName)
+  console.log(handlerName);
 
   const index = handlerName.lastIndexOf('.');
   const fileName = handlerName.substring(0, index);
   const filePath = `${env('LAMBDA_TASK_ROOT')}/${fileName}`;
-  console.log('file', filePath)
+  console.log('file', filePath);
   let file;
   try {
     file = await import(filePath);
-    console.log('file', file)
+    console.log('file', file);
   }
   catch (cause) {
     if (
@@ -455,7 +456,7 @@ interface WebSocketEvent {
 function isWebSocketEvent(event: any): event is WebSocketEvent {
   return (
     typeof event.requestContext === 'object'
-    && typeof event.requestContext.connectionId === 'string'
+      && typeof event.requestContext.connectionId === 'string'
   );
 }
 
@@ -754,7 +755,7 @@ class LambdaWebSocket implements ServerWebSocket {
     return this.sendBinary(buffer, compress);
   }
 
-  sendText(data: string, compress?: boolean): number {
+  sendText(data: string, _compress?: boolean): number {
     fetchAws(this.#url, {
       method: 'POST',
       body: data,
@@ -782,7 +783,7 @@ class LambdaWebSocket implements ServerWebSocket {
       })
       .catch((error) => {
         warnOnce('Failed to send WebSocket message', error);
-      })
+      });
     return data.length;
   }
 
@@ -820,7 +821,7 @@ class LambdaWebSocket implements ServerWebSocket {
     return -1;
   }
 
-  close(code?: number, reason?: string): void {
+  close(_code?: number, _reason?: string): void {
     // TODO: code? reason?
     fetchAws(this.#url, {
       method: 'DELETE',
@@ -848,7 +849,7 @@ class LambdaWebSocket implements ServerWebSocket {
       })
       .catch((error) => {
         warnOnce('Failed to close WebSocket', error);
-      })
+      });
     this.readyState = 3; // WebSocket.CLOSED;
   }
 

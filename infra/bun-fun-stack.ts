@@ -3,9 +3,9 @@ import type { StackProps } from 'aws-cdk-lib';
 import { Stack } from 'aws-cdk-lib';
 import type { Construct } from 'constructs';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
-import { BunFun } from './constructs/BunFun'
+import { BunFun } from './constructs/BunFun';
 
-const lambdaDir = path.join(import.meta.dir, '../packages/functions/src')
+const lambdaDir = path.join(import.meta.dir, '../packages/functions/src');
 
 export class BunFunStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {

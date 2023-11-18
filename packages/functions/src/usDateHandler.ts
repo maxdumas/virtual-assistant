@@ -1,7 +1,7 @@
-import type { APIGatewayEvent } from 'aws-lambda'
-import { Logger } from '@aws-lambda-powertools/logger'
+import type { APIGatewayEvent } from 'aws-lambda';
+import { Logger } from '@aws-lambda-powertools/logger';
 
-const logger = new Logger({ serviceName: 'usDateHandler' })
+const logger = new Logger({ serviceName: 'usDateHandler' });
 
 export async function usDateHandler(_event: APIGatewayEvent) {
   logger.info('Calling US Date Handler');
@@ -16,5 +16,5 @@ export async function usDateHandler(_event: APIGatewayEvent) {
     headers: {
       'Content-Type': 'text/plain;charset=utf-8',
     },
-  })
+  });
 }

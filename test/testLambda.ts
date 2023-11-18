@@ -4,5 +4,5 @@ export async function handler() {
     body: JSON.stringify({
       message: 'Hello world!',
     }),
-  }
+  };
 }

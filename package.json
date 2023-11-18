@@ -1,5 +1,5 @@
 {
-  "name": "bunnyfied-aws-cdk",
+  "name": "virtual-assistant",
   "type": "module",
   "version": "0.1.0",
   "module": "index.ts",
@@ -23,16 +23,16 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.98.0",
-    "bun": "^1.0.2",
+    "bun": "^1",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^1.0.0-beta.2",
-    "@types/node": "20.5.9",
+    "@antfu/eslint-config": "^1",
+    "@types/node": "20",
     "aws-cdk": "2.98.0",
-    "bun-types": "^1.0.2",
-    "eslint": "^8.49.0",
-    "typescript": "~5.2.2"
+    "bun-types": "^1",
+    "eslint": "^8",
+    "typescript": "~5"
   }
 }

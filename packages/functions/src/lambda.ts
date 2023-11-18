@@ -5,6 +5,6 @@ export default {
       headers: {
         'Content-Type': 'text/plain;charset=utf-8',
       },
-    })
+    });
   },
-}
+};

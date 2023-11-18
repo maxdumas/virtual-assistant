@@ -8,5 +8,5 @@ describe('esm-only-package-lambda', () => {
     const german = getGermanDateString(date);
 
     expect(german).toEqual('10.10.2021');
-  })
+  });
 });

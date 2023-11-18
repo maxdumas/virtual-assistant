@@ -24,7 +24,7 @@ export interface BunFunPropsWithoutFunctionUrl extends BunFunPropsBase {
   functionsUrl?: false
 }
 
-type BunFunProps = BunFunPropsWithFunctionUrl | BunFunPropsWithoutFunctionUrl
+type BunFunProps = BunFunPropsWithFunctionUrl | BunFunPropsWithoutFunctionUrl;
 
 export class BunFun extends Construct {
   constructor(scope: Construct, id: string, props: BunFunProps) {
@@ -32,26 +32,26 @@ export class BunFun extends Construct {
 
     (async () => {
       try {
-        let bunPath: string
+        let bunPath: string;
         if (props.bunConfig?.target === 'bun') {
           const bunFunctions = await Bun.build({
             entrypoints: [props.entrypoint],
             outdir: 'dist',
             target: 'bun',
             minify: true,
-          })
-          bunPath = path.dirname(bunFunctions.outputs[0].path)
+          });
+          bunPath = path.dirname(bunFunctions.outputs[0].path);
         }
         else {
-          bunPath = path.dirname(props.entrypoint)
+          bunPath = path.dirname(props.entrypoint);
         }
 
-        const BunFunLayerArn = Fn.importValue('BunFunLayerArn') ?? props.bunLayer
+        const BunFunLayerArn = Fn.importValue('BunFunLayerArn') ?? props.bunLayer;
         const layer = LayerVersion.fromLayerVersionArn(
           this,
           'imported-BunFunLayerVersion',
           BunFunLayerArn,
-        )
+        );
 
         const lambda = new Function(this, 'BunFunction', {
           code: Code.fromAsset(bunPath),
@@ -59,34 +59,34 @@ export class BunFun extends Construct {
           runtime: Runtime.PROVIDED_AL2,
           layers: [layer],
           architecture: Architecture.ARM_64,
-        })
+        });
 
         lambda.addToRolePolicy(
           new PolicyStatement({
             actions: ['lambda:GetLayerVersion'],
             resources: [BunFunLayerArn],
           }),
-        )
+        );
 
         if (props.functionsUrl) {
           lambda.addPermission('InvokeFunctionsUrl', {
             principal: new AnyPrincipal(),
             action: 'lambda:InvokeFunctionUrl',
             functionUrlAuthType: props.functionUrlAuthType,
-          })
+          });
 
           const fnUrl = lambda.addFunctionUrl({
             authType: props.functionUrlAuthType,
-          })
+          });
 
           new CfnOutput(this, `${props.handler}Url`, {
             value: fnUrl.url,
-          })
+          });
         }
       }
       catch (error) {
         console.error(error);
       }
-    })()
+    })();
   }
 }
