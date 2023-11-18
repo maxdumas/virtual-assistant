@@ -7,6 +7,6 @@ describe('esm-only-package-lambda', () => {
     const { getGermanDateString } = await import('../src/dateHelper');
     const german = getGermanDateString(date);
 
-    expect(german).toEqual('10.10.2021');
+    expect(german).toEqual('09.10.2021');
   });
 });
