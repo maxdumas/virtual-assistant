@@ -9,14 +9,18 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.456.0",
+    "@aws-sdk/credential-providers": "^3.454.0",
     "@types/dateformat": "^5.0.0",
-    "dateformat": "^5.0.3"
+    "dateformat": "^5.0.3",
+    "mailparser": "^3.6.5"
   },
   "devDependencies": {
     "@aws-lambda-powertools/logger": "^1.13.1",
     "@aws-lambda-powertools/metrics": "^1.13.1",
     "@aws-lambda-powertools/tracer": "^1.13.1",
     "@types/aws-lambda": "8.10.121",
+    "@types/mailparser": "^3.4.4",
     "vitest": "^0.34.5"
   }
 }

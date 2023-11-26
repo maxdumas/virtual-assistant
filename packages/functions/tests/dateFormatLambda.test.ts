@@ -6,7 +6,7 @@ describe('dateFormatLambda', async () => {
     const esmOnlyPackageLambda = await import('../src/dateHelper');
     vi.spyOn(esmOnlyPackageLambda, 'getGermanDateString').mockReturnValue('10.10.2021');
     const result = await germanDateHandler({} as any);
-    expect(result.statusCode).toEqual(200);
+    expect(result.status).toEqual(200);
     expect(result.body).toBe('It is about time to have some fun with Bun: 10.10.2021');
   });
 

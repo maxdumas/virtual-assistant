@@ -18,13 +18,6 @@ import { BunFunLayerStack } from './bun-fun-layer-stack';
 
 const lambdaDir = path.join(import.meta.dir, '../packages/functions/src');
 
-// const ALLOWED_FORWARDERS = [
-//   'max@dumas.nyc',
-//   'max@ulama.tech',
-//   'mfd64@cornell.edu',
-//   'maltor124@gmail.com',
-// ];
-
 export class VirtualAssistant extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
