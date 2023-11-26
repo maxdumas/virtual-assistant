@@ -49,9 +49,7 @@ await handler({
     {
       messageId: '',
       receiptHandle: '',
-      attributes: {
-
-      } as any,
+      attributes: {} as any,
       messageAttributes: {} as any,
       md5OfBody: {} as any,
       eventSource: {} as any,
