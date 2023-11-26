@@ -21,6 +21,7 @@
     "@aws-lambda-powertools/tracer": "^1.13.1",
     "@types/aws-lambda": "8.10.121",
     "@types/mailparser": "^3.4.4",
+    "aws-sdk-client-mock": "^3.0.0",
     "vitest": "^0.34.5"
   }
 }

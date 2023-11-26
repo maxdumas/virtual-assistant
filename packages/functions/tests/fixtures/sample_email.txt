@@ -1,0 +1,3077 @@
+Return-Path: <maltor124@gmail.com>
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+ by inbound-smtp.us-east-1.amazonaws.com with SMTP id k88489vmck45oc0fbhesk66ursv8s3bqki2hea81
+ for events@va.dumas.nyc;
+ Sun, 26 Nov 2023 17:45:49 +0000 (UTC)
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.222.174 as permitted sender) client-ip=209.85.222.174; envelope-from=maltor124@gmail.com; helo=mail-qk1-f174.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.222.174 as permitted sender) client-ip=209.85.222.174; envelope-from=maltor124@gmail.com; helo=mail-qk1-f174.google.com;
+ dkim=pass header.i=@gmail.com;
+ dmarc=pass header.from=gmail.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFIcU5BZkZvOUdwencwZWllZ2NYMTRjMjNBazV5UVBkVG1pZ0ZMeUNVMkVFMDRzRE1keEtkVDcrc1IwUzh6bW5BWWU1RGFWTy9pYzFpZDEzbk0yN1diRzBHa3d1SHlIMkw4SzRCeUdKNzBtbDFOZkRLbjBNbjkrTnZQWStDaUZQdWxTekdhZUZyNVVLOXNuNDllNExaZTcrcCtId0dzRXhkeVdNcFRCUUVBQThhQXNWQ2JkMVVTWXFKb3RmeUIwRGNDRzJLOUk2WS8yVEhmMzBrL1FaNDRLYzNzWmVpWW9GQWlXNGF3ZE1yMzlyZFI1c3hlRDBqMmNXckk0N1g1ZGJzek15Y2ZSSElyZWsrYmYrNWRlbHpjYm1kdlBCMm1IMGFLNXF1YlRmdE9SaHc9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=itezLWYHrPZLZN2qybXTtkJXY2RVMy9+nAXtoCbmmwaRlM8Faz059SNiUrnsNlBCbtSPZaLDSzj6iYrFo3a6mWebBcve8mhFPcVCay/2qsLH/LRrSNDp42ZyJQ9h982x+f3Bd9mbQrutL6jVPbF0W+xFeU1hUb1STVegStVRQbY=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1701020749; v=1; bh=QqxjETmEDyGcsNTlS59qQZlh/3UWNaRffcOHCPD+yT0=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-77d84f8808dso106223285a.2
+        for <events@va.dumas.nyc>; Sun, 26 Nov 2023 09:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701020748; x=1701625548; darn=va.dumas.nyc;
+        h=mime-version:message-id:to:references:date:subject:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vDZpp+BOukSlKK9uRti6EkYlzDuob91Sf6RmLGzxI4k=;
+        b=ORa7O7/IPaJj6FBHg5BYXG4kaiXrl25r6NxuN73IDjH0nl8JcMKZj50nA9O8VhA1DN
+         w8SB9FStpqPujIAS4VeTLrfzskC3odfVyL64SR15HohfPDwdWHaXmE49sxiQ2nlweoxi
+         TdYgoUnS3q3wXff5zB5TMnPffOC5IQvfRIRTQtXLoGiHY+XPq6wMC+/uay4qdOicpeh5
+         5qQUUTMYajc50iJWziHP8Y/xRlSnL2uDGH+nv58YLqvoHYE/s4aE2TszqZhN7zpemFAx
+         wjU0vsY+n4lC4jGgen18ei9HelWYlFQJgcuQZsE8txjkRXj0rxH0bZQLE5x8csLc6IC9
+         9SWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701020748; x=1701625548;
+        h=mime-version:message-id:to:references:date:subject:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vDZpp+BOukSlKK9uRti6EkYlzDuob91Sf6RmLGzxI4k=;
+        b=YRZcqbjbVxqvsc6ALxA4W16QqWvuFzoCqqcGCw0c1zI+uIxKCJ1PSsveSH50iJKwyt
+         n+btInE7SxVDcjUy8LDBMV9Aofbv8viOot91dyVaSvnQXbACinYyp3c1BeTdgQzEByT/
+         dZ4AKT/6UWfmrKs62nsalOYElNkZIue2THfaanXUTgPMKfBsaFv+G2asTlUl0uFSenxB
+         umRMqgaO0/0upSyCwJXYRFHLlSydmyFx9U3H/pxo4Njs9PHMA+dw1/ZmYf4jR9JNY2bV
+         BtoWWXk3AiPRZEU8d75gAZTW+J3DN9xKPTRVCqxJYl42sSnESAKBu/WraUMGNOeV8a1X
+         bfXg==
+X-Gm-Message-State: AOJu0YyttaVSp2AVXDIi0YCH++d3d24x27WztyJcvlVuH8a+AGYxCEVd
+	itLMhh3jRNfm8H+nmtSu4ezyjAABok0=
+X-Google-Smtp-Source: AGHT+IEuDk19UYAZqnUsa700cxFDlBdjL5+6mvtPUjmKXoE7dny1ixFKoxsdDDl4aJdX3eN90dx8iQ==
+X-Received: by 2002:a05:620a:8f01:b0:76f:1eac:e72d with SMTP id rh1-20020a05620a8f0100b0076f1eace72dmr8458402qkn.38.1701020747054;
+        Sun, 26 Nov 2023 09:45:47 -0800 (PST)
+Return-Path: <maltor124@gmail.com>
+Received: from smtpclient.apple ([2a09:bac5:a6f3:6e::b:243])
+        by smtp.gmail.com with ESMTPSA id j2-20020a05620a410200b0077d7326c60csm3072951qko.38.2023.11.26.09.45.46
+        for <events@va.dumas.nyc>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 Nov 2023 09:45:46 -0800 (PST)
+From: Max Dumas <maltor124@gmail.com>
+X-Google-Original-From: Max Dumas <max@dumas.nyc>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_0547E371-F069-457F-9D51-476DB5D8ACEE"
+X-Priority: 3
+Subject: Fwd: nonsense: 11.24 to 11.30
+Date: Sun, 26 Nov 2023 12:45:35 -0500
+References: <0101018c02801c5c-459b31e0-0c51-4243-943a-a812ef772918-000000@us-west-2.amazonses.com>
+To: events@va.dumas.nyc
+Message-Id: <7A414BAB-25C9-431E-B92C-3B303AC0A076@dumas.nyc>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
+
+
+--Apple-Mail=_0547E371-F069-457F-9D51-476DB5D8ACEE
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+
+
+> Begin forwarded message:
+>=20
+> From: "nonsense nyc" <jstark@nonsensenyc.com>
+> Subject: nonsense: 11.24 to 11.30
+> Date: November 24, 2023 at 1:03:19=E2=80=AFPM EST
+> To: "nonsense nyc Subscriber" <maltor124@gmail.com>
+> Reply-To: "nonsense nyc" <jstark@nonsensenyc.com>
+>=20
+> Unsubscribe Automatically =
+<https://nonsensenyc.com/cgi-bin/dada/mail.cgi/t/gh5jgbR8R2FzHH4fwA9mgH3hB=
+aXDTSHGAoVxmvuj/lus/1700848999>
+> =20
+> Friday, November 24
+> * Smash Friday, Manhattan
+> * Future Femmes, Brooklyn
+> * Hanksgiving, Brooklyn
+> =20
+> Saturday, November 25
+> * Joke-e-oke: Standup Comedy Karaoke Game Show, Brooklyn
+> * Tinder Live, Queens
+> =20
+> Sunday, November 26
+> * Reverend Billy Welcome to the Earthchxrch, Manhattan
+> =20
+> Monday, November 27
+> * Lonely Artists Salon, Manhattan
+> * Hyperfocus: A Neurodivergent Comedy Show, Manhattan
+> =20
+> Tuesday, November 28
+> * Sounds Great, Brooklyn
+> =20
+> Wednesday, November 29
+> * Gl'Amour! Manhattan
+> * Rhythm and Reset, Brooklyn
+> * The Brick Presents: Slash, Brooklyn
+> =20
+> Thursday, November 30
+> * Protocinema, Brooklyn
+> * American History Sex, Queens
+> * Boxcutter Cabaret, Manhattan
+> * Cryptochrome, Manhattan
+> =20
+> Spectre
+> * Pirate Abolitionists
+> =20
+> Learning
+> * Lingerie Making Workshop
+> =20
+> NOTE: For some navigation help, or an explanation for what this is all =
+about, scroll all the way down to NONSENSE. You can donate to this =
+project at nonsensenyc.com/special. Also: We make a lot of mistakes, =
+especially with dates; you should always double check our work before =
+you go out.
+> =20
+> =20
+> XXXXX COVER ART XXXXX
+> =20
+> =20
+> herringboned
+> =20
+> =20
+> XXXXX FRIDAY, NOVEMBER 24 XXXXX
+> =20
+> =20
+> Smash Friday
+> =20
+> Smash Friday is the new Black Friday. The day after Thanksgiving, the =
+Smash Truck will pull up in front of Macy's Herald Square, and invite =
+people into our polycarbonate-shielded smash enclosure to smash the =
+living bejesus out of old toys, crockery, printers, appliances, and =
+other smashables, to a soundtrack of thrash music, maybe some flaming =
+brass, and the screams of encouragement from onlookers. Then we'll move =
+on to Union Square and do the same. Is this some statement about =
+politics or consumerism? Nah, not really, it's about the joy of =
+smashing.
+> =20
+> Macy's Herald Square, usually the corner of 35th Street and 7th =
+Avenue, Manhattan
+> noon; $free
+> =20
+> Union Square West, at 15th Street, Manhattan
+> 2:30p; $free
+> =20
+> =20
+> ***** Also on FRIDAY *****
+> =20
+> =20
+> Future Femmes
+> =20
+> We Are the Future! is teaming up with OnlyFemmes for another art =
+fair/art share and curated dance party at the Sultan Room. This =
+interdisciplinary art fair/art share and curated dance party focused on =
+bringing NYC's cutting-edge artists and creatives together to experience =
+the intersections between multimedia practices, technology, =
+sustainability and identity through their unique lenses. Join us for a =
+sexy, all-night dance party featuring immersive art installations, DJs, =
+live visuals, burlesque, art vendors, tarot card readings, body paint, =
+and flash tattoos. With DJs Klipdagga, Vee, B=C3=91=C2=8Fee, J.N.R., and =
+Senaida. Tarot readings by Techno Tarot. Flash tattoos by Liv. Clothing =
+by Amor y Dinero. Herbal Treats by the Rooted Zodiac. We are dedicated =
+to creating a safe and inclusive space for members of the BIPOC and =
+LGBTQ+ community.
+> =20
+> The Sultan Room Rooftop
+> 234 Starr Street, Brooklyn
+> 11p-late; $10 presale, $15 door
+> 21 and over
+> https://link.dice.fm/ka900dbd6fa8
+> =20
+> =20
+> ***** Also on FRIDAY *****
+> =20
+> =20
+> =46rom the Skint:
+> =20
+> Hanksgiving
+> =20
+> Come celebrate the Owl Music Parlor=E2=80=99s fifth annual =
+Hanksgiving, honoring the music of Hank Williams and, this year, his =
+100th birthday. Featuring the house band: Jared Engel (upright bass), =
+Sam Talmadge (steel), Wyndham Baird (acoustic guitar), and Minnie Jordan =
+(fiddle). And special guest singers Ali Dineen, Gustavo Rodriguez, =
+Charlie Burnham, and Feral Foster.  With hosts Rachel Swaner and Oren =
+Bloedow. With pumpkin pie after the show.
+> =20
+> The Owl Music Parlor
+> 497 Rogers Avenue, Brooklyn
+> 7:30p doors, 8p show; $15 suggested donation
+> https://theowl.nyc/calendar/
+> =20
+> =20
+> XXXXX SATURDAY, NOVEMBER 25 XXXXX
+> =20
+> =20
+> Joke-e-oke: Standup Comedy Karaoke Game Show
+> =20
+> Joke-e-oke is karaoke with standup comedy material, where the audience =
+gets to be the stars in a three-round game show. Five contestants pick a =
+classic standup comedy routine, and all the material is right there on =
+the monitor. Three celebrity comedian judges rate their performances to =
+determine the Joke-e-oke Champ. Hosted Harmon Leon.
+> =20
+> Young Ethels
+> 506 5th Avenue, Brooklyn
+> 5p; $free
+> =
+https://www.eventbrite.com/e/joke-e-oke-standup-comedy-karaoke-tickets-757=
+877922267
+> =20
+> =20
+> ***** Also on SATURDAY *****
+> =20
+> =20
+> Tinder Live
+> =20
+> Tinder Live with Lane Moore is the critically acclaimed comedy show =
+where Moore projects her dating app onto a screen, swipes through =
+profiles live on stage, and the audience votes whether she swipes right =
+or left, to cathartic, hilarious, and surprisingly kind results. With =
+Mike Drucker and Jill Twiss.
+> =20
+> TV Eye
+> 1647 Weirfield Street, Ridgewood, Queens
+> 7p doors, 8p show; $20-25
+> https://wl.seetickets.us/event/tinder-live-with-lane-moore/573124
+> =20
+> =20
+> XXXXX SUNDAY, NOVEMBER 26 XXXXX
+> =20
+> =20
+> Reverend Billy and the Stop Shopping Choir in Welcome to the =
+Earthchxrch
+> =20
+> Each holiday season, Reverend Billy and the Stop Shopping Choir =
+revisit Joe's Pub with a new hour of rousing, moving, and then comic =
+songs and sermonettes on the theme of activism in defense of the Earth. =
+Designer and director is Savitri D.
+> =20
+> Performances of Reverend Billy and the Stop Shopping Choir combine =
+activism and highly responsive entertainment. They are constantly =
+changing and include songs, rituals, audience testimonials, and a =
+15-minute comic-then-serious sermon by Bill Talen as the energetic, =
+charismatic revivalist preacher Reverend Billy. Each show is different =
+but all are motivated by a profound imperative: to strengthen individual =
+connection to the Earth, to develop pathways to social change and to =
+hold financial institutions and policy makers accountable for their role =
+in the Climate Crisis.
+> =20
+> Joe's Pub
+> 425 Lafayette Street, Manhattan
+> 6p; $15 plus 2 drink or 1 food item minimum, per person.
+> Continues December 10 and December 17
+> savitri@revbilly.com
+> https://publictheater.org
+> https://revbilly.com
+> =20
+> =20
+> XXXXX MONDAY, NOVEMBER 27 XXXXX
+> =20
+> =20
+> Lonely Artists Salon
+> =20
+> The Lonely Artists Salon, a space for artists to be artists, not =
+necessarily to make art. For all the disillusioned young performers in =
+NYC who are tired of having to pay or to wait for permission to do the =
+things they love, this salon meets every other Monday to offer young =
+performers of all disciplines the chance to present work, hear work from =
+others, provide feedback and play fun theater games. We=E2=80=99re =
+always excited to meet more people.
+> =20
+> Lonely Artist Salon
+> Producers Club Studio 1
+> 358 West 44th Street, Manhattan
+> 8:30-10:30p; $free
+> =
+https://www.instagram.com/reel/Cz6h5VSOF2p/?utm_source=3Dig_web_copy_link&=
+igshid=3DMzRlODBiNWFlZA=3D=3D
+> =20
+> =20
+> ***** Also on MONDAY *****
+> =20
+> =20
+> Hyperfocus: A Neurodivergent Comedy Show
+> =20
+> Hyperfocus is a first-class ticket into the inner workings of a =
+neurodivergent brain. Come see NYC's best neurodivergent comedians share =
+the wealth of their super niche knowledge. Previous topics included =
+Fermentation, Do We Need Another Wonka Reboot? and the JFK =
+Assassination. What will they hyperfocus on next? Featuring: Ronald =
+Metellus, Dan Wickes, Blaise Vacca, and Rachel Kenaston. Hosted by =
+Virginia Dickens.
+> =20
+> Caveat
+> 21A Clinton Street, Manhattan
+> 9:30p PM, doors at 9 PM
+> Tickets: $20 standard/door
+> $10 livestream
+> https://www.caveat.nyc/events/hyperfocus-11-27-2023
+> =20
+> =20
+> XXXXX TUESDAY, NOVEMBER 28 XXXXX
+> =20
+> =20
+> Sounds Great
+> =20
+> The comedy show you've grown to love is celebrating five years this =
+month. It's a big five-year-old party, full of Sounds Greats past and =
+present, and filled with some of our favorite comedians from the past =
+five years. Join Nora and Paige as they run through all the moments that =
+have prompted them to say =E2=80=9Csounds great," and there will be =
+cake! This month's show will once again feature our signature mix of =
+both rising and established performers, with a priority on queer and =
+diverse points of view. The November anniversary show features: Alison =
+Leiby, Brittany Carney, Dash Turner, Indigo Asim, Art Cai, Rebecca =
+Weiser, Ryan Ciewiz, and James Wendt. Hosted by Nora Jefferies and Paige =
+Smith-Hogan.
+> =20
+> Our Wicked Lady
+> 153 Morgan Avenue, Brooklyn
+> 7:30p; $free with RSVP
+> https://link.dice.fm/dafef79de8c5
+> =20
+> =20
+> XXXXX WEDNESDAY, DECEMBER 29 XXXXX
+> =20
+> =20
+> The Love Show NYC presents:
+> =20
+> Gl'Amour!
+> =20
+> The gorgeous Love Show dancers come high kicking into the Slipper Room =
+every last Wednesday of the month, bringing a little Paris, a little =
+Vegas, and a lot of NYC heart. Come for stunning dance, burlesque, =
+cabaret, live song and variety, and leave full of love and glimmer.
+> =20
+> The Slipper Room
+> 167 Orchard Street, Manhattan
+> 7p doors, 7:30p show; $30
+> =
+https://www.slipperroom.com/event-details/guest-event-the-love-show-presen=
+ts-glamour-doors-7-00pm-3
+> =20
+> =20
+> ***** Also on WEDNESDAY *****
+> =20
+> =20
+> Rhythm and Reset
+> =20
+> Rhythm and Reset is a brand-new music event series presented in =
+partnership by Sound Mind Live and House of Yes. Unlock the magic with =
+lasting community connection, soulful jams, a beautiful setting and =
+intimate musical showcases by Death by Comet, Natie and Dani Sundream.
+> =20
+> The Onyx Room
+> 8 Wyckoff Avenue, Brooklyn
+> 7p; $5
+> https://www.eventbrite.com/e/rhythm-reset-tickets-741606824977
+> =20
+> =20
+> ***** Also on WEDNESDAY *****
+> =20
+> =20
+> The Brick Presents: Slash
+> =20
+> Betty and Veronica have tried everything to cure their crippling =
+depression and existential despair. Everything, that is, except acting =
+out homoerotic fanfiction.
+> =20
+> Cue a Russian doll of stories slashing John Lennon x Paul McCartney, =
+Susan Sontag x Camille Paglia, Trotsky x Stalin, Byron x Shelley, and =
+Kirk x Spock.
+> =20
+> As the layers of fantasy multiply, the girls are left questioning what =
+really drives their games, and to what end.
+> =20
+> Slash is a two-woman comedy written, adapted, directed, and performed =
+by Emily Allan and Leah Hennessey.
+> =20
+> The Brick
+> 579 Metropolitan Avenue, Brooklyn
+> 8p; $10
+> Continues through December 2
+> https://www.bricktheater.com/event/slash/2023-11-29/
+> =20
+> =20
+> XXXXX THURSDAY, NOVEMBER 30 XXXXX
+> =20
+> =20
+> Protocinema
+> =20
+> A celebration of the wonderful and weird world of short films. =
+Protocinema is a live screening of short film and video works from =
+unknown or emerging directors. The program will highlight works that are =
+evocative, eclectic, experimental, low budget/DIY, innovative, and ask =
+more questions than they answer.
+> =20
+> Protocinema maintains that shorts are a democratic medium for =
+everyone, not just filmmakers, and are a unique entity separate from the =
+traditional feature length studio film.
+> =20
+> Shapeshifter Lab (Park Slope)
+> 837 Union Street, Brooklyn
+> 6:30p doors; $free, pay what you want
+> filmfreeway.com/protocinema
+> =20
+> =20
+> ***** Also on THURSDAY *****
+> =20
+> =20
+> American History Sex
+> =20
+> How would James Madison do on Tinder? Which president had the best =
+dying words? Did the Union troops write the original diss track? All of =
+this and more with comedian, history lover, and self-lover Bobby =
+Sheehan.
+> =20
+> Q.E.D.
+> 27-16 23rd Avenue, Astoria, Queens
+> 7:30p; $10
+> =
+https://qedastoria.com/products/american-history-sex-a-stand-up-comedy-sho=
+w
+> =20
+> =20
+> ***** Also on THURSDAY *****
+> =20
+> =20
+> Boxcutter Cabaret
+> =20
+> The Boxcutter Cabaret is an evening of short puppet shows curated by =
+the Boxcutter Collective. Our special guests this month are =
+Brooklyn/Montreal-based Chilean duo Teatro Ji, presenting the NYC =
+premiere of their new cantastoria, You Choose: A Speculative Spectacle. =
+This show is supported in part by the Puppet Slam Network.
+> =20
+> Earth Chxrch
+> Avenue C and East 3rd Street, Manhattan
+> 6:30p doors, 7p show; $20 suggested donation
+> boxcuttercollective.org
+> =20
+> =20
+> ***** Also on THURSDAY *****
+> =20
+> =20
+> Cryptochrome
+> =20
+> Cryptochrome is a sonic odyssey across the animal kingdom that invites =
+audiences to imagine themselves in the sensory worlds of other living =
+things. Named after a protein believed to be responsible for the ability =
+to navigate using the Earth=E2=80=99s geomagnetic field, cryptochrome =
+explores realms of perception beyond the visible. Written, directed, =
+composed, and performed by Evan Silver aka Tiresias. Music direction by =
+Tristan Allen.
+> =20
+> The Cell
+> 338 23rd Street, Manhattan
+> 8p; $20-30
+> continues through December 9
+> https://www.tickettailor.com/events/thecelltheatre/1023532
+> =20
+> =20
+> XXXXX FRIDAY, DECEMBER 1 XXXXX
+> =20
+> =20
+> Power Suit
+> =20
+> Half comedy show, half Goop board meeting. Power Suit is a comedy =
+cabaret devoted to #GirlBoss culture. Join hosts, Mariah Oxley and =
+Rebecca Weiser, for an evening of comedy, music, and drag performances =
+inspired by famed Girl Bosses Gwyneth Paltrow and Elizabeth Holmes. Come =
+laugh and commit light financial fraud. This month=E2=80=99s show =
+features Indigo Asim, Francesca D'Uva, Alexa Loftus, and Mary Beth =
+Barone.
+> =20
+> Club Cumming
+> 505 East 6th Street, Manhattan
+> 7:30p doors, 8p show; $12.35 advance, $15 door
+> =
+https://clubcummingnyc.com/schedule/2023/12/1/power-suit-with-rebecca-weis=
+er-amp-mariah-oxley
+> =20
+> =20
+> XXXXX UPCOMING XXXXX
+> =20
+> =20
+> * Burning of Grievances, December 17
+> =20
+> =20
+> XXXXX WISHLIST XXXXX
+> =20
+> =20
+> What have you been wishing for? Collaborators, grant monies, a new =
+home? Please send brief listings to jstark@nonsensenyc.com. In the =
+SPACES section we only list available apartments, lofts, studios, and =
+one-off rentals -- not spaces wanted.
+> =20
+> =20
+> ***** ARTY STUFF *****
+> =20
+> =20
+> * Are You Gregnant? Do you know someone who is Gregnant? (Pregnant by =
+a person named Greg?) Great, send them my way! Please help me in my =
+quest to find all of the amazing Gregnant women in the greater NYC area. =
+If I can find enough of us, I plan to throw the first-ever =
+all-Gregnant-party. There will be dancing, tomfoolery, pregnancy =
+burlesque shows, belly painting, and all sorts of mischief for this =
+special selection of people. If you are Gregnant, please fill out this =
+form: www.gregnant.mom or email glittermilkpresents@gmail.com. =
+https://www.instagram.com/glitterr.milk/
+> =20
+> =20
+> XXXXX SPECTRE PRIORITY XXXXX
+> =20
+> =20
+> Before it had a name, Spectre Event Horizon Group used to meet at a =
+bar to commiserate and grok the increasingly sci-fi present. Along the =
+way #SPECTRE developed an online platform for sharing specialized =
+investigative research, presented as gossip for non-specialists, all =
+searchable here: spectrevision.net. Excerpts are compiled for Nonsense =
+by J. Sinopoli. Please recommend relevant search terms or search results =
+to spectre.event.horizon.group]at]gmail.com.
+> =20
+> =20
+> ***** Pirate Abolitionists *****
+> =20
+> https://spectrevision.net/2023/11/21/pirate-abolitionists/
+> =20
+> "Not only did the infamous pirates wreak millions in damages, but they =
+sowed havoc among the human traffickers along the coast, burning and =
+exploding their ships and ports, bringing the trade nearly to a =
+standstill. Once these pirates had been caught and 'summarily dealt =
+with,' Britain=E2=80=99s Royal African Company was able to rebuild their =
+horrific trade, allowing the newer British model of chattel slavery to =
+become the predominant form of enslavement in the U.S."
+> =20
+> =20
+> XXXXX LEARNING XXXXX
+> =20
+> =20
+> Learning is something you do, but it=E2=80=99s also a reflection of =
+who you=E2=80=99d like to be. We like to be cheap and eclectic, with a =
+mix of classes or events that will make our world a little bigger and =
+more interesting. Who do you want to be? Maybe it's in here.
+> =20
+> One-time listings are categorized weekly, with general recurring =
+classes listed at the end on the first Friday of each month.
+> =20
+> Learning is compiled and edited weekly by Corinne Brenner. Please send =
+listing suggestions to learning]at]nonsensenyc.com.
+> =20
+> =20
+> ***** LEARNING: SATURDAY *****
+> =20
+> =20
+> Introduction to Birdwatching Outings
+> =20
+> Whether you=E2=80=99re just starting out or have already joined the =
+birding ranks, this introductory outings is for you. Every Saturday, =
+join Prospect Park Alliance and a member of the Brooklyn Bird Club on an =
+introductory walk to learn the basics of birding and search for the =
+dozens of species that visit Prospect Park through all seasons.
+> =20
+> All levels are welcome and walks will begin at the Prospect Park =
+Audubon Center. No registration necessary. Children under 12 must be =
+accompanied by an adult. Please bring binoculars if you have them.
+> =20
+> Route Description: This outing is at a leisurely pace with lots of =
+stops to observe birds. A different route through the park may be taken =
+each week. There may be steps, slight inclines, and grass and dirt paths =
+with exposed roots. We will cover approximately 1.5-2 miles.
+> =20
+> Brooklyn Bird Club
+> Audubon Center, Prospect Park near Lincoln Drive entrance, Brooklyn
+> 10a-noon; $free
+> =
+prospectpark.org/event/introduction-to-birdwatching-outings/2023-11-25/
+> =20
+> =20
+> ***** LEARNING: SATURDAY *****
+> =20
+> =20
+> Lingerie Making Workshop
+> =20
+> Design and sew a made-to-measure bralette with Rue du Paradis, a =
+bespoke, high-end lingerie brand.
+> =20
+> Receive a custom pattern to your measurements. Select a lace and band =
+from the lace bar. Sew your own bespoke bralette with step-by-step =
+instructions. An unmissable four-hour experience. No sewing experience =
+needed. Workshops are held Thursday through Sunday.
+> =20
+> Rue du Paradis
+> Building 5, Industry City, 51 35th Street, Brooklyn
+> 10:30a-2:30p; $150
+> industrycity.com/event/rue-du-paradis-lingerie-making-workshop-23/
+> =20
+> =20
+> ***** LEARNING: SATURDAY *****
+> =20
+> =20
+> Radical History Walking Tour
+> =20
+> Museum of Reclaimed Urban Space organic historian Bill Weinberg =
+reveals the stories behind squats, gardens, riots, uprisings and more. =
+=46rom the Civil War Draft Riots of the 1860s to the Young Lords, Black =
+Panthers, hippies, Yippies and Up Against the Wall Motherf*ckers of the =
+1960s, to the Tompkins Square anarchists of the =E2=80=9980s, to the =
+tree-hugging urban enviros of the =E2=80=9990s to the neighborhood =
+Earthies keeping the legacy alive today. Unlike other neighborhood =
+tours, we broaden beyond individual anecdotes to paint a strong =
+historical, academic, and cultural big picture of the Lower East Side.
+> =20
+> Five things you will learn on the Lower East Side Radical History Tour =
+that you probably didn=E2=80=99t know:
+> =20
+> 1. The radical politics of the songwriter who penned the =E2=80=9CWizard=
+ of Oz=E2=80=9D soundtrack. 2. What building in the East Village links =
+the Gershwin brothers, the Black Panthers, and Iggy Pop. 3. What park in =
+the East Village was the secret birthplace of both the Hare Krishna =
+movement and Occupy Wall Street. 4. How New York City=E2=80=99s =
+recycling program began as an initiative of East Village community =
+activists. 5. Why the same area of the city has been variously known as =
+Burnt Mill Point, Drydock, Little Germany, Klein Deutschland, the Lower =
+East Side, Loisaida, the East Village, and Alphabet City. Tours need =
+three people to run, and almost always do.
+> =20
+> Museum of Reclaimed Urban Space
+> 155 Avenue C, between 9th and 10th streets, Manhattan
+> 3-5p; $20
+> morusnyc.org/radical-history-tour/
+> =20
+> =20
+> ***** LEARNING: MONDAY *****
+> =20
+> =20
+> Sound 101 for Everyone
+> =20
+> This class is to give anyone who works with and around sound a solid =
+understanding of the fundamental principles of SOUND. We will look at =
+everything from acoustic theory, dsp, how hardware works, useful =
+software, and everything in between. There will be an open ended portion =
+at the end of the class for further questions and discussion, and the =
+class will mold itself to the needs of the folks taking it.
+> =20
+> This course will take a dive into every aspect of sound. My goal is to =
+have you, the eager new(or old) disciple of sound, to walk away feeling =
+like you have a basic grasp of how the things we hear come into being. =
+The knowledge gained in this course will benefit everyone from artists =
+to technicians to venue managers, even your grandma would learn =
+something she can use. The class will be in three parts, the first being =
+more of a lecture on the principles of sound, the second being a hands =
+on to learn how we use and interact with equipment and our surroundings. =
+The third is open ended, time to go over anything that confused you or =
+to cover things that didn=E2=80=99t come up, whatever is helpful for the =
+class. Bring your questions and your listening ears, that=E2=80=99s all =
+you need.
+> =20
+> The Brick
+> 579 Metropolitan Avenue, Brooklyn
+> 6-9p lecture, 9-10p Q&A; $25-50
+> bricktheater.com/sound-101-for-everyone-with-jimmy-kavetas/
+> =20
+> =20
+> ***** LEARNING: WEDNESDAY *****
+> =20
+> =20
+> Tieknots: A Hands-On Intro on How to Count, Describe, and Tie Tieknots
+> =20
+> Tying tieknots can range from mandatory chore that you just want to =
+get through, to a means of self-expression in a part of fashion where =
+self-expression is limited. But how might one describe and share how to =
+tie a particular knot? And can we use a systematic enough description to =
+count how many tieknots could exist, and see whether the ones people use =
+are rare or common?
+> =20
+> My research enumerating tieknots has been a question on Qi, has been =
+heckled on NPR and helped get me a green card to the US. In this class I =
+will share how counting tieknots can be done, and how the same things =
+that help me count tieknots can help you remember how to tie your tie =
+and broaden your repertoire.
+> =20
+> You do not need to bring anything - I will be bringing practice ties =
+for everyone to use. If you want to use your own tie, you are of course =
+welcome to.
+> =20
+> NYC Resistor
+> 87 Third Avenue, fourth floor, Brooklyn
+> 7-8p; $25
+> =
+eventbrite.com/e/tieknots-a-hands-on-intro-on-how-to-count-describe-and-ti=
+e-tieknots-tickets-740165704547
+> =20
+> =20
+> ***** LEARNING: WEDNESDAY *****
+> =20
+> =20
+> World Socialist Cinema: A lecture by Masha Salazkina
+> =20
+> Light Industry will be hosting a talk by scholar Masha Salazkina, =
+related to her recent book World Socialist Cinema. Its focus is the =
+Festival of Cinemas of Asia, Africa, and Latin America, which took place =
+in Tashkent, the capital of Soviet Uzbekistan, from the 1960s to the =
+1980s. Salazkina uses the history of this festival as an aperture into a =
+unique configuration of world cinema, one that emerged through the =
+entanglement of internationalist solidarities and trans-racial =
+affinities, of personal bonds and institutional connections, of =
+multi-faceted artistic expressions and political commitments.
+> =20
+> Light Industry
+> 361 Stagg Street, suite 407, Brooklyn
+> 7p; $10 suggested donation
+> lightindustry.org/salazkina
+> =20
+> =20
+> ***** LEARNING: THURSDAY *****
+> =20
+> =20
+> Podcast School
+> =20
+> In the crowded podcast-scape, the stories that break through the noise =
+often reside in the space between genres; the work that feels most alive =
+borrows techniques from audio drama and memoir, from reporting and =
+poetry and cinema alike.
+> =20
+> Chloe, accompanied by an extraordinary roster of guest instructors, =
+will draw back the curtain and break down how to make innovative work =
+that bends the rules. The workshop will go inside work that views sound =
+as instrumental and not incidental to telling impactful stories in =
+audio. It will explore work that embraces the subjective -- the =
+personal, the political, the experimental. And it will examine how =
+fiction can be a way to get at the truth.
+> =20
+> Union Docs
+> 352 Onderdonk Avenue, Bushwick
+> 10a-4:30p, Nov 30 - Dec 3; $385 before November 24, $425 after
+> uniondocs.org/event/podcast-school-2023/
+> =20
+> =20
+> ***** LEARNING: THURSDAY *****
+> =20
+> =20
+> Brooklyn Miniaturists
+> =20
+> Danny Cortes, Aaron Kinard, and Jack Giambanco have many things in =
+common. They are all longtime Brooklynites, all self-taught artists =
+whose passion for making miniatures took hold in just the last few =
+years, and all make work that represents Brooklyn in stunningly =
+intricate detail. Join them in a conversation about their craft, =
+Brooklyn, and how they found themselves in this world of tiny art.
+> =20
+> Center for Brooklyn History
+> 128 Pierrepont Street, Brooklyn
+> 6:30-7:30p; $free
+> =
+bklynlibrary.org/calendar/cbh-talk-brooklyn-center-for-brooklyn-20231130
+> =20
+> =20
+> ***** LEARNING: THURSDAY *****
+> =20
+> =20
+> Drug Testing Workshop
+> =20
+> Curious about what you =E2=80=9Cdon=E2=80=99t know you don=E2=80=99t =
+know=E2=80=9D about psychedelic safety? Interested in seeing drug =
+testing firsthand?
+> =20
+> Join us for an evening with harm reduction educator Mohawk Kellye =
+Greene, who knows better than most the dangers and concerns present out =
+there in New York=E2=80=99s Psychedelic Wilds.
+> =20
+> Drug testing: Learn to wield a reagent kit to test ketamine, MDMA, =
+LSD, and other substances with a step-by-step demonstration. Understand =
+the science behind how reagents detect potential adulterants and leave =
+with confidence in your ability to use your kit independently.
+> =20
+> Talk and Q&A: Stay informed about the latest adulterants entering the =
+scene, hear stories from the front lines of harm reduction, and bring =
+your toughest and most pressing questions about psychedelic safety to =
+the Q+A.
+> =20
+> Why Attend?
+> =20
+> Empowerment: Equip yourself with the skills to take control of your =
+own safety, and come away with your own fentanyl test strip and reagent =
+kit.
+> =20
+> Knowledge: Gain a deep understanding of harm reduction practices, =
+promoting responsible and conscious use of psychedelic substances.
+> =20
+> Connection: Connect with a community of like-minded individuals who =
+prioritize well-being and education within the realm of psychedelics.
+> =20
+> Whether you're a seasoned psychonaut or new to the psychedelic scene, =
+this is your chance to gain personalized insights, dispel myths, hear =
+stories from the festival scene, and receive practical advice on =
+harm-reduction strategies.
+> =20
+> (Note: no scheduled substances are permitted at the venue.)
+> =20
+> Brooklyn Psychedelic Society
+> Social Hour Room, 110 Schermerhorn Street, Brooklyn
+> 7-9p; $10
+> bps.community/event-details/drug-testing-workshop-with-mohawk-greene
+> =20
+> =20
+> ***** LEARNING: UPCOMING *****
+> =20
+> =20
+> GLOwanus Light Installation Giveaway
+> =20
+> GLOwanus is a public art project designed to inform Gowanus residents =
+about water quality in the Gowanus Canal. Join us in December for the =
+official launch of the newly-designed GLOwanus light at our neighborhood =
+giveaway event.
+> =20
+> Open to all ages; participants under 18 must attend with an adult. =
+Light refreshments and snacks will be served.
+> =20
+> Designed by Brooklyn-based artists Manav Singla and Ridima Jain, =
+GLOwanus is a small lantern that flashes when the Gowanus Canal is under =
+a City-issued waterbody advisory -- meaning there=E2=80=99s a good =
+chance Combined Sewer Overflow (CSO) has recently spilled or may soon =
+spill into the Canal. When GLOwanus flashes, it=E2=80=99s signaling that =
+untreated wastewater is polluting or has recently polluted the Canal. =
+Using less water in your home or business, especially immediately before =
+and during rainstorms, is one way to help reduce the level of CSO.
+> =20
+> Van Alen Institute
+> 303 Bond Street, Brooklyn
+> 12:30-2p; $free
+> =
+eventbrite.com/e/glowanus-light-installation-giveaway-tickets-760688057457=
+
+> =20
+> =20
+> XXXXX HELP XXXXX
+> =20
+> =20
+> We want to help you find help for short-term projects. Do you have a =
+project, an event, or an action that needs an extra push, a few more =
+people, or an extra set of hands? Please send your calls for help to: =
+help]at]nonsensenyc.com.
+> =20
+> =20
+> XXXXX NONSENSE XXXXX
+> =20
+> =20
+> nonsense nyc is a discriminating resource for independent art, weird =
+events, strange happenings, unique parties, and senseless culture in new =
+york city.
+> =20
+> please remember you are welcome to pass nonsense along to anyone who =
+needs to see it, but you do not have permission to use any of the =
+listings for your commercial endeavor. if you are receiving this list as =
+a forward you can sign up for yourself at nonsensenyc.com/subscribe.
+> =20
+> if you believe independent artists should support other independent =
+artists, we accept donations. here's a link to support nonsense all year =
+long: https://withfriends.co/nonsense_nyc/join. thanks.
+> =20
+> =20
+> XXXXX END XXXXX
+>=20
+
+
+--Apple-Mail=_0547E371-F069-457F-9D51-476DB5D8ACEE
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"overflow-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;"><br =
+id=3D"lineBreakAtBeginningOfMessage"><div><br><blockquote =
+type=3D"cite"><div>Begin forwarded message:</div><br =
+class=3D"Apple-interchange-newline"><div style=3D"margin-top: 0px; =
+margin-right: 0px; margin-bottom: 0px; margin-left: 0px;"><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif; color:rgba(0, 0, 0, 1.0);"><b>From: </b></span><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif;">"nonsense nyc" =
+&lt;jstark@nonsensenyc.com&gt;<br></span></div><div style=3D"margin-top: =
+0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px;"><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif; color:rgba(0, 0, 0, 1.0);"><b>Subject: </b></span><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif;"><b>nonsense: 11.24 to 11.30</b><br></span></div><div =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px;"><span style=3D"font-family: -webkit-system-font, =
+Helvetica Neue, Helvetica, sans-serif; color:rgba(0, 0, 0, =
+1.0);"><b>Date: </b></span><span style=3D"font-family: =
+-webkit-system-font, Helvetica Neue, Helvetica, sans-serif;">November =
+24, 2023 at 1:03:19=E2=80=AFPM EST<br></span></div><div =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px;"><span style=3D"font-family: -webkit-system-font, =
+Helvetica Neue, Helvetica, sans-serif; color:rgba(0, 0, 0, 1.0);"><b>To: =
+</b></span><span style=3D"font-family: -webkit-system-font, Helvetica =
+Neue, Helvetica, sans-serif;">"nonsense nyc Subscriber" =
+&lt;maltor124@gmail.com&gt;<br></span></div><div style=3D"margin-top: =
+0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px;"><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif; color:rgba(0, 0, 0, 1.0);"><b>Reply-To: </b></span><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif;">"nonsense nyc" =
+&lt;jstark@nonsensenyc.com&gt;<br></span></div><br><div>
+
+	<title></title>
+
+<div>
+<div><span style=3D"font-family:Courier New,Courier,monospace;"><a =
+href=3D"https://nonsensenyc.com/cgi-bin/dada/mail.cgi/t/gh5jgbR8R2FzHH4fwA=
+9mgH3hBaXDTSHGAoVxmvuj/lus/1700848999">Unsubscribe Automatically =
+</a></span></div>
+
+<div>&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Friday, November =
+24</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Smash Friday, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Future Femmes, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Hanksgiving, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Saturday, November =
+25</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Joke-e-oke: Standup Comedy =
+Karaoke Game Show, Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Tinder Live, =
+Queens</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Sunday, November =
+26</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Reverend Billy Welcome to =
+the Earthchxrch, Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Monday, November =
+27</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Lonely Artists Salon, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Hyperfocus: A Neurodivergent =
+Comedy Show, Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Tuesday, November =
+28</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Sounds Great, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Wednesday, November =
+29</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Gl'Amour! =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Rhythm and Reset, Brooklyn =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* The Brick Presents: Slash, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Thursday, November =
+30</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Protocinema, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* American History Sex, =
+Queens</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Boxcutter Cabaret, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Cryptochrome, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">Spectre</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Pirate =
+Abolitionists</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">Learning</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Lingerie Making =
+Workshop</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">NOTE: For some navigation =
+help, or an explanation for what this is all about, scroll all the way =
+down to NONSENSE. You can donate to this project at =
+nonsensenyc.com/special. Also: We make a lot of mistakes, especially =
+with dates; you should always double check our work before you go =
+out.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX COVER ART =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">herringboned =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX FRIDAY, NOVEMBER 24 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Smash =
+Friday</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Smash Friday is the new Black =
+Friday. The day after Thanksgiving, the Smash Truck will pull up in =
+front of Macy's Herald Square, and invite people into our =
+polycarbonate-shielded smash enclosure to smash the living bejesus out =
+of old toys, crockery, printers, appliances, and other smashables, to a =
+soundtrack of thrash music, maybe some flaming brass, and the screams of =
+encouragement from onlookers. Then we'll move on to Union Square and do =
+the same. Is this some statement about politics or consumerism? Nah, not =
+really, it's about the joy of smashing.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Macy's Herald Square, usually =
+the corner of 35th Street and 7th Avenue, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">noon; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Union Square West, at 15th =
+Street, Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">2:30p; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on FRIDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Future =
+Femmes</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">We Are the Future! is teaming =
+up with OnlyFemmes for another art fair/art share and curated dance =
+party at the Sultan Room. This interdisciplinary art fair/art share and =
+curated dance party focused on bringing NYC's cutting-edge artists and =
+creatives together to experience the intersections between multimedia =
+practices, technology, sustainability and identity through their unique =
+lenses. Join us for a sexy, all-night dance party featuring immersive =
+art installations, DJs, live visuals, burlesque, art vendors, tarot card =
+readings, body paint, and flash tattoos. With DJs Klipdagga, Vee, =
+B=C3=91=C2=8Fee, J.N.R., and Senaida. Tarot readings by Techno Tarot. =
+Flash tattoos by Liv. Clothing by Amor y Dinero. Herbal Treats by the =
+Rooted Zodiac. We are dedicated to creating a safe and inclusive space =
+for members of the BIPOC and LGBTQ+ community. =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Sultan Room =
+Rooftop</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">234 Starr Street, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">11p-late; $10 presale, $15 =
+door</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">21 and =
+over</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://link.dice.fm/ka900dbd6fa8</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on FRIDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">=46rom the =
+Skint:</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">Hanksgiving</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Come celebrate the Owl Music =
+Parlor=E2=80=99s fifth annual Hanksgiving, honoring the music of Hank =
+Williams and, this year, his 100th birthday. Featuring the house band: =
+Jared Engel (upright bass), Sam Talmadge (steel), Wyndham Baird =
+(acoustic guitar), and Minnie Jordan (fiddle). And special guest singers =
+Ali Dineen, Gustavo Rodriguez, Charlie Burnham, and Feral Foster.&nbsp; =
+With hosts Rachel Swaner and Oren Bloedow. With pumpkin pie after the =
+show.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">&nbsp;</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Owl Music =
+Parlor</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">497 Rogers Avenue, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7:30p doors, 8p show; $15 =
+suggested donation</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://theowl.nyc/calendar/</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX SATURDAY, NOVEMBER 25 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Joke-e-oke: Standup Comedy =
+Karaoke Game Show</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">&nbsp;</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Joke-e-oke is karaoke with =
+standup comedy material, where the audience gets to be the stars in a =
+three-round game show. Five contestants pick a classic standup comedy =
+routine, and all the material is right there on the monitor. Three =
+celebrity comedian judges rate their performances to determine the =
+Joke-e-oke Champ. Hosted Harmon Leon.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Young =
+Ethels</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">506 5th Avenue, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">5p; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.eventbrite.com/e/joke-e-oke-standup-comedy-karaoke-=
+tickets-757877922267</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on SATURDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Tinder =
+Live</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div><span style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt">Tinder Live with Lane Moore is the critically =
+acclaimed comedy show where Moore projects her dating app onto a screen, =
+swipes through profiles live on stage, and the audience votes whether =
+she swipes right or left, to cathartic, hilarious, and surprisingly kind =
+results. With Mike Drucker and Jill Twiss.</span></span></div>
+
+<div>&nbsp;</div>
+
+<div><span style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt">TV Eye </span></span></div>
+
+<div><span style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt">1647 Weirfield Street, Ridgewood, =
+Queens</span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7p doors, 8p show; =
+$20-25</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://wl.seetickets.us/event/tinder-live-with-lane-moore/5731=
+24</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX SUNDAY, NOVEMBER 26 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Reverend Billy and the Stop =
+Shopping Choir in Welcome to the Earthchxrch</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Each holiday season, Reverend =
+Billy and the Stop Shopping Choir revisit Joe's Pub with a new hour of =
+rousing, moving, and then comic songs and sermonettes on the theme of =
+activism in defense of the Earth. Designer and director is Savitri =
+D.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Performances of Reverend Billy =
+and the Stop Shopping Choir combine activism and highly responsive =
+entertainment. They are constantly changing and include songs, rituals, =
+audience testimonials, and a 15-minute comic-then-serious sermon by Bill =
+Talen as the energetic, charismatic revivalist preacher Reverend Billy. =
+Each show is different but all are motivated by a profound imperative: =
+to strengthen individual connection to the Earth, to develop pathways to =
+social change and to hold financial institutions and policy makers =
+accountable for their role in the Climate =
+Crisis.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Joe's =
+Pub</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">425 Lafayette Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">6p; $15 plus 2 drink or 1 food =
+item minimum, per person.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Continues December 10 and =
+December 17</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">savitri@revbilly.com</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://publictheater.org</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://revbilly.com</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX MONDAY, NOVEMBER 27 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Lonely Artists =
+Salon</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Lonely Artists Salon, a =
+space for artists to be artists, not necessarily to make art. For all =
+the disillusioned young performers in NYC who are tired of having to pay =
+or to wait for permission to do the things they love, this salon meets =
+every other Monday to offer young performers of all disciplines the =
+chance to present work, hear work from others, provide feedback and play =
+fun theater games. We=E2=80=99re always excited to meet more =
+people.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Lonely Artist Salon =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Producers Club Studio =
+1</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">358 West 44th Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">8:30-10:30p; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.instagram.com/reel/Cz6h5VSOF2p/?utm_source=3Dig_web=
+_copy_link&amp;igshid=3DMzRlODBiNWFlZA=3D=3D</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on MONDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Hyperfocus: A Neurodivergent =
+Comedy Show</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Hyperfocus is a first-class =
+ticket into the inner workings of a neurodivergent brain. Come see NYC's =
+best neurodivergent comedians share the wealth of their super niche =
+knowledge. Previous topics included Fermentation, Do We Need Another =
+Wonka Reboot? and the JFK Assassination. What will they hyperfocus on =
+next? Featuring: Ronald Metellus, Dan Wickes, Blaise Vacca, and Rachel =
+Kenaston. Hosted by Virginia Dickens. </span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Caveat =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">21A Clinton Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">9:30p PM, doors at 9 PM =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Tickets: $20 =
+standard/door</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">$10 =
+livestream</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.caveat.nyc/events/hyperfocus-11-27-2023</span></spa=
+n></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX TUESDAY, NOVEMBER 28 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Sounds =
+Great</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The comedy show you've grown =
+to love is celebrating five years this month. It's a big five-year-old =
+party, full of Sounds Greats past and present, and filled with some of =
+our favorite comedians from the past five years. Join Nora and Paige as =
+they run through all the moments that have prompted them to say =
+=E2=80=9Csounds great," and there will be cake! This month's show will =
+once again feature our signature mix of both rising and established =
+performers, with a priority on queer and diverse points of view. The =
+November anniversary show features: Alison Leiby, Brittany Carney, Dash =
+Turner, Indigo Asim, Art Cai, Rebecca Weiser, Ryan Ciewiz, and James =
+Wendt. Hosted by Nora Jefferies and Paige =
+Smith-Hogan.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Our Wicked =
+Lady</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">153 Morgan Avenue, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7:30p; $free with =
+RSVP</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://link.dice.fm/dafef79de8c5</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX WEDNESDAY, DECEMBER 29 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Love Show NYC =
+presents:</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">Gl'Amour!</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The gorgeous Love Show dancers =
+come high kicking into the Slipper Room every last Wednesday of the =
+month, bringing a little Paris, a little Vegas, and a lot of NYC heart. =
+Come for stunning dance, burlesque, cabaret, live song and variety, and =
+leave full of love and glimmer.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Slipper =
+Room</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">167 Orchard Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7p doors, 7:30p show; =
+$30</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.slipperroom.com/event-details/guest-event-the-love-=
+show-presents-glamour-doors-7-00pm-3</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on WEDNESDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Rhythm and Reset =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Rhythm and Reset is a =
+brand-new music event series presented in partnership by Sound Mind Live =
+and House of Yes. Unlock the magic with lasting community connection, =
+soulful jams, a beautiful setting and intimate musical showcases by =
+Death by Comet, Natie and Dani Sundream. </span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Onyx Room =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">8 Wyckoff Avenue, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7p; =
+$5</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.eventbrite.com/e/rhythm-reset-tickets-741606824977<=
+/span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on WEDNESDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Brick Presents: =
+Slash</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Betty and Veronica have tried =
+everything to cure their crippling depression and existential despair. =
+Everything, that is, except acting out homoerotic =
+fanfiction.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Cue a Russian doll of stories =
+slashing John Lennon x Paul McCartney, Susan Sontag x Camille Paglia, =
+Trotsky x Stalin, Byron x Shelley, and Kirk x Spock. =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">As the layers of fantasy =
+multiply, the girls are left questioning what really drives their games, =
+and to what end.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Slash is a two-woman comedy =
+written, adapted, directed, and performed by Emily Allan and Leah =
+Hennessey.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The =
+Brick</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">579 Metropolitan Avenue, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">8p; =
+$10</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Continues through December =
+2</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.bricktheater.com/event/slash/2023-11-29/</span></sp=
+an></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX THURSDAY, NOVEMBER 30 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">Protocinema</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">A celebration of the wonderful =
+and weird world of short films. Protocinema is a live screening of short =
+film and video works from unknown or emerging directors. The program =
+will highlight works that are evocative, eclectic, experimental, low =
+budget/DIY, innovative, and ask more questions than they =
+answer.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Protocinema maintains that =
+shorts are a democratic medium for everyone, not just filmmakers, and =
+are a unique entity separate from the traditional feature length studio =
+film.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Shapeshifter Lab (Park =
+Slope)</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">837 Union Street, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">6:30p doors; $free, pay what =
+you want</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">filmfreeway.com/protocinema</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on THURSDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">American History =
+Sex</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">How would James Madison do on =
+Tinder? Which president had the best dying words? Did the Union troops =
+write the original diss track? All of this and more with comedian, =
+history lover, and self-lover Bobby Sheehan.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Q.E.D. =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">27-16 23rd Avenue, Astoria, =
+Queens</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7:30p; =
+$10</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://qedastoria.com/products/american-history-sex-a-stand-up=
+-comedy-show</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on THURSDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Boxcutter =
+Cabaret</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The Boxcutter Cabaret is an =
+evening of short puppet shows curated by the Boxcutter Collective. Our =
+special guests this month are Brooklyn/Montreal-based Chilean duo Teatro =
+Ji, presenting the NYC premiere of their new cantastoria, You Choose: A =
+Speculative Spectacle. This show is supported in part by the Puppet Slam =
+Network.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Earth Chxrch =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Avenue C and East 3rd Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">6:30p doors, 7p show; $20 =
+suggested donation</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">boxcuttercollective.org</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Also on THURSDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">Cryptochrome</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Cryptochrome is a sonic =
+odyssey across the animal kingdom that invites audiences to imagine =
+themselves in the sensory worlds of other living things. Named after a =
+protein believed to be responsible for the ability to navigate using the =
+Earth=E2=80=99s geomagnetic field, cryptochrome explores realms of =
+perception beyond the visible. Written, directed, composed, and =
+performed by Evan Silver aka Tiresias. Music direction by Tristan Allen. =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The =
+Cell</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">338 23rd Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">8p; =
+$20-30</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">continues through December =
+9</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://www.tickettailor.com/events/thecelltheatre/1023532</spa=
+n></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX FRIDAY, DECEMBER 1 =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Power =
+Suit</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Half comedy show, half Goop =
+board meeting. Power Suit is a comedy cabaret devoted to #GirlBoss =
+culture. Join hosts, Mariah Oxley and Rebecca Weiser, for an evening of =
+comedy, music, and drag performances inspired by famed Girl Bosses =
+Gwyneth Paltrow and Elizabeth Holmes. Come laugh and commit light =
+financial fraud. This month=E2=80=99s show features Indigo Asim, =
+Francesca D'Uva, Alexa Loftus, and Mary Beth Barone. =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Club =
+Cumming</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">505 East 6th Street, =
+Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7:30p doors, 8p show; $12.35 =
+advance, $15 door </span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://clubcummingnyc.com/schedule/2023/12/1/power-suit-with-r=
+ebecca-weiser-amp-mariah-oxley</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX UPCOMING =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Burning of Grievances, =
+December 17</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX WISHLIST =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">What have you been wishing =
+for? Collaborators, grant monies, a new home? Please send brief listings =
+to jstark@nonsensenyc.com. In the SPACES section we only list available =
+apartments, lofts, studios, and one-off rentals -- not spaces =
+wanted.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** ARTY STUFF =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">* Are You Gregnant? Do you =
+know someone who is Gregnant? (Pregnant by a person named Greg?) Great, =
+send them my way! Please help me in my quest to find all of the amazing =
+Gregnant women in the greater NYC area. If I can find enough of us, I =
+plan to throw the first-ever all-Gregnant-party. There will be dancing, =
+tomfoolery, pregnancy burlesque shows, belly painting, and all sorts of =
+mischief for this special selection of people. If you are Gregnant, =
+please fill out this form: www.gregnant.mom or email =
+glittermilkpresents@gmail.com. =
+https://www.instagram.com/glitterr.milk/</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX SPECTRE PRIORITY =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Before it had a name, Spectre =
+Event Horizon Group used to meet at a bar to commiserate and grok the =
+increasingly sci-fi present. Along the way #SPECTRE developed an online =
+platform for sharing specialized investigative research, presented as =
+gossip for non-specialists, all searchable here: spectrevision.net. =
+Excerpts are compiled for Nonsense by J. Sinopoli. Please recommend =
+relevant search terms or search results to =
+spectre.event.horizon.group]at]gmail.com.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** Pirate Abolitionists =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">https://spectrevision.net/2023/11/21/pirate-abolitionists/</spa=
+n></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">"Not only did the infamous =
+pirates wreak millions in damages, but they sowed havoc among the human =
+traffickers along the coast, burning and exploding their ships and =
+ports, bringing the trade nearly to a standstill. Once these pirates had =
+been caught and 'summarily dealt with,' Britain=E2=80=99s Royal African =
+Company was able to rebuild their horrific trade, allowing the newer =
+British model of chattel slavery to become the predominant form of =
+enslavement in the U.S."</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX LEARNING XXXXX =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Learning is something you do, =
+but it=E2=80=99s also a reflection of who you=E2=80=99d like to be. We =
+like to be cheap and eclectic, with a mix of classes or events that will =
+make our world a little bigger and more interesting. Who do you want to =
+be? Maybe it's in here.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">One-time listings are =
+categorized weekly, with general recurring classes listed at the end on =
+the first Friday of each month.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Learning is compiled and =
+edited weekly by Corinne Brenner. Please send listing suggestions to =
+learning]at]nonsensenyc.com.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: SATURDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Introduction to Birdwatching =
+Outings</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Whether you=E2=80=99re just =
+starting out or have already joined the birding ranks, this introductory =
+outings is for you. Every Saturday, join Prospect Park Alliance and a =
+member of the Brooklyn Bird Club on an introductory walk to learn the =
+basics of birding and search for the dozens of species that visit =
+Prospect Park through all seasons.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">All levels are welcome and =
+walks will begin at the Prospect Park Audubon Center. No registration =
+necessary. Children under 12 must be accompanied by an adult. Please =
+bring binoculars if you have them.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Route Description: This outing =
+is at a leisurely pace with lots of stops to observe birds. A different =
+route through the park may be taken each week. There may be steps, =
+slight inclines, and grass and dirt paths with exposed roots. We will =
+cover approximately 1.5-2 miles.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Brooklyn Bird =
+Club</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Audubon Center, Prospect Park =
+near Lincoln Drive entrance, Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">10a-noon; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">prospectpark.org/event/introduction-to-birdwatching-outings/202=
+3-11-25/</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: SATURDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Lingerie Making =
+Workshop</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Design and sew a =
+made-to-measure bralette with Rue du Paradis, a bespoke, high-end =
+lingerie brand.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Receive a custom pattern to =
+your measurements. Select a lace and band from the lace bar. Sew your =
+own bespoke bralette with step-by-step instructions. An unmissable =
+four-hour experience. No sewing experience needed. Workshops are held =
+Thursday through Sunday.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Rue du =
+Paradis</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Building 5, Industry City, 51 =
+35th Street, Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">10:30a-2:30p; =
+$150</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">industrycity.com/event/rue-du-paradis-lingerie-making-workshop-=
+23/</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: SATURDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Radical History Walking =
+Tour</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Museum of Reclaimed Urban =
+Space organic historian Bill Weinberg reveals the stories behind squats, =
+gardens, riots, uprisings and more. =46rom the Civil War Draft Riots of =
+the 1860s to the Young Lords, Black Panthers, hippies, Yippies and Up =
+Against the Wall Motherf*ckers of the 1960s, to the Tompkins Square =
+anarchists of the =E2=80=9980s, to the tree-hugging urban enviros of the =
+=E2=80=9990s to the neighborhood Earthies keeping the legacy alive =
+today. Unlike other neighborhood tours, we broaden beyond individual =
+anecdotes to paint a strong historical, academic, and cultural big =
+picture of the Lower East Side.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Five things you will learn on =
+the Lower East Side Radical History Tour that you probably didn=E2=80=99t =
+know:</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">1. The radical politics of the =
+songwriter who penned the =E2=80=9CWizard of Oz=E2=80=9D soundtrack. 2. =
+What building in the East Village links the Gershwin brothers, the Black =
+Panthers, and Iggy Pop. 3. What park in the East Village was the secret =
+birthplace of both the Hare Krishna movement and Occupy Wall Street. 4. =
+How New York City=E2=80=99s recycling program began as an initiative of =
+East Village community activists. 5. Why the same area of the city has =
+been variously known as Burnt Mill Point, Drydock, Little Germany, Klein =
+Deutschland, the Lower East Side, Loisaida, the East Village, and =
+Alphabet City. Tours need three people to run, and almost always =
+do.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Museum of Reclaimed Urban =
+Space</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">155 Avenue C, between 9th and =
+10th streets, Manhattan</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">3-5p; =
+$20</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">morusnyc.org/radical-history-tour/</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: MONDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Sound 101 for =
+Everyone</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">This class is to give anyone =
+who works with and around sound a solid understanding of the fundamental =
+principles of SOUND. We will look at everything from acoustic theory, =
+dsp, how hardware works, useful software, and everything in between. =
+There will be an open ended portion at the end of the class for further =
+questions and discussion, and the class will mold itself to the needs of =
+the folks taking it.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">This course will take a dive =
+into every aspect of sound. My goal is to have you, the eager new(or =
+old) disciple of sound, to walk away feeling like you have a basic grasp =
+of how the things we hear come into being. The knowledge gained in this =
+course will benefit everyone from artists to technicians to venue =
+managers, even your grandma would learn something she can use. The class =
+will be in three parts, the first being more of a lecture on the =
+principles of sound, the second being a hands on to learn how we use and =
+interact with equipment and our surroundings. The third is open ended, =
+time to go over anything that confused you or to cover things that =
+didn=E2=80=99t come up, whatever is helpful for the class. Bring your =
+questions and your listening ears, that=E2=80=99s all you =
+need.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">The =
+Brick</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">579 Metropolitan Avenue, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">6-9p lecture, 9-10p Q&amp;A; =
+$25-50</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">bricktheater.com/sound-101-for-everyone-with-jimmy-kavetas/</sp=
+an></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: WEDNESDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Tieknots: A Hands-On Intro on =
+How to Count, Describe, and Tie Tieknots</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Tying tieknots can range from =
+mandatory chore that you just want to get through, to a means of =
+self-expression in a part of fashion where self-expression is limited. =
+But how might one describe and share how to tie a particular knot? And =
+can we use a systematic enough description to count how many tieknots =
+could exist, and see whether the ones people use are rare or =
+common?</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">My research enumerating =
+tieknots has been a question on Qi, has been heckled on NPR and helped =
+get me a green card to the US. In this class I will share how counting =
+tieknots can be done, and how the same things that help me count =
+tieknots can help you remember how to tie your tie and broaden your =
+repertoire.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">You do not need to bring =
+anything - I will be bringing practice ties for everyone to use. If you =
+want to use your own tie, you are of course welcome =
+to.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">NYC =
+Resistor</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">87 Third Avenue, fourth floor, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7-8p; =
+$25</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">eventbrite.com/e/tieknots-a-hands-on-intro-on-how-to-count-desc=
+ribe-and-tie-tieknots-tickets-740165704547</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: WEDNESDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">World Socialist Cinema: A =
+lecture by Masha Salazkina</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Light Industry will be hosting =
+a talk by scholar Masha Salazkina, related to her recent book World =
+Socialist Cinema. Its focus is the Festival of Cinemas of Asia, Africa, =
+and Latin America, which took place in Tashkent, the capital of Soviet =
+Uzbekistan, from the 1960s to the 1980s. Salazkina uses the history of =
+this festival as an aperture into a unique configuration of world =
+cinema, one that emerged through the entanglement of internationalist =
+solidarities and trans-racial affinities, of personal bonds and =
+institutional connections, of multi-faceted artistic expressions and =
+political commitments.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Light =
+Industry</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">361 Stagg Street, suite 407, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7p; $10 suggested =
+donation</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">lightindustry.org/salazkina</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: THURSDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Podcast =
+School</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">In the crowded podcast-scape, =
+the stories that break through the noise often reside in the space =
+between genres; the work that feels most alive borrows techniques from =
+audio drama and memoir, from reporting and poetry and cinema =
+alike.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Chloe, accompanied by an =
+extraordinary roster of guest instructors, will draw back the curtain =
+and break down how to make innovative work that bends the rules. The =
+workshop will go inside work that views sound as instrumental and not =
+incidental to telling impactful stories in audio. It will explore work =
+that embraces the subjective -- the personal, the political, the =
+experimental. And it will examine how fiction can be a way to get at the =
+truth.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Union =
+Docs</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">352 Onderdonk Avenue, =
+Bushwick</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">10a-4:30p, Nov 30 - Dec 3; =
+$385 before November 24, $425 after</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">uniondocs.org/event/podcast-school-2023/</span></span></span></=
+div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: THURSDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Brooklyn =
+Miniaturists</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Danny Cortes, Aaron Kinard, =
+and Jack Giambanco have many things in common. They are all longtime =
+Brooklynites, all self-taught artists whose passion for making =
+miniatures took hold in just the last few years, and all make work that =
+represents Brooklyn in stunningly intricate detail. Join them in a =
+conversation about their craft, Brooklyn, and how they found themselves =
+in this world of tiny art. </span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Center for Brooklyn =
+History</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">128 Pierrepont Street, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">6:30-7:30p; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">bklynlibrary.org/calendar/cbh-talk-brooklyn-center-for-brooklyn=
+-20231130</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: THURSDAY =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Drug Testing =
+Workshop</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Curious about what you =
+=E2=80=9Cdon=E2=80=99t know you don=E2=80=99t know=E2=80=9D about =
+psychedelic safety? Interested in seeing drug testing firsthand? =
+</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Join us for an evening with =
+harm reduction educator Mohawk Kellye Greene, who knows better than most =
+the dangers and concerns present out there in New York=E2=80=99s =
+Psychedelic Wilds.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Drug testing: Learn to wield a =
+reagent kit to test ketamine, MDMA, LSD, and other substances with a =
+step-by-step demonstration. Understand the science behind how reagents =
+detect potential adulterants and leave with confidence in your ability =
+to use your kit independently.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Talk and Q&amp;A: Stay =
+informed about the latest adulterants entering the scene, hear stories =
+from the front lines of harm reduction, and bring your toughest and most =
+pressing questions about psychedelic safety to the =
+Q+A.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Why =
+Attend?</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Empowerment: Equip yourself =
+with the skills to take control of your own safety, and come away with =
+your own fentanyl test strip and reagent kit.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Knowledge: Gain a deep =
+understanding of harm reduction practices, promoting responsible and =
+conscious use of psychedelic substances.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Connection: Connect with a =
+community of like-minded individuals who prioritize well-being and =
+education within the realm of psychedelics.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Whether you're a seasoned =
+psychonaut or new to the psychedelic scene, this is your chance to gain =
+personalized insights, dispel myths, hear stories from the festival =
+scene, and receive practical advice on harm-reduction =
+strategies.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">(Note: no scheduled substances =
+are permitted at the venue.)</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Brooklyn Psychedelic =
+Society</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Social Hour Room, 110 =
+Schermerhorn Street, Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">7-9p; =
+$10</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">bps.community/event-details/drug-testing-workshop-with-mohawk-g=
+reene</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">***** LEARNING: UPCOMING =
+*****</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">GLOwanus Light Installation =
+Giveaway</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">GLOwanus is a public art =
+project designed to inform Gowanus residents about water quality in the =
+Gowanus Canal. Join us in December for the official launch of the =
+newly-designed GLOwanus light at our neighborhood giveaway =
+event.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Open to all ages; participants =
+under 18 must attend with an adult. Light refreshments and snacks will =
+be served.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Designed by Brooklyn-based =
+artists Manav Singla and Ridima Jain, GLOwanus is a small lantern that =
+flashes when the Gowanus Canal is under a City-issued waterbody advisory =
+-- meaning there=E2=80=99s a good chance Combined Sewer Overflow (CSO) =
+has recently spilled or may soon spill into the Canal. When GLOwanus =
+flashes, it=E2=80=99s signaling that untreated wastewater is polluting =
+or has recently polluted the Canal. Using less water in your home or =
+business, especially immediately before and during rainstorms, is one =
+way to help reduce the level of CSO.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">Van Alen =
+Institute</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">303 Bond Street, =
+Brooklyn</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">12:30-2p; =
+$free</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">eventbrite.com/e/glowanus-light-installation-giveaway-tickets-7=
+60688057457</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX HELP =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">We want to help you find help =
+for short-term projects. Do you have a project, an event, or an action =
+that needs an extra push, a few more people, or an extra set of hands? =
+Please send your calls for help to: =
+help]at]nonsensenyc.com.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX NONSENSE =
+XXXXX</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">nonsense nyc is a =
+discriminating resource for independent art, weird events, strange =
+happenings, unique parties, and senseless culture in new york =
+city.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">&nbsp;</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">please remember you are =
+welcome to pass nonsense along to anyone who needs to see it, but you do =
+not have permission to use any of the listings for your commercial =
+endeavor. if you are receiving this list as a forward you can sign up =
+for yourself at nonsensenyc.com/subscribe.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span =
+style=3D"">&nbsp;</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">if you believe independent =
+artists should support other independent artists, we accept donations. =
+here's a link to support nonsense all year long: =
+https://withfriends.co/nonsense_nyc/join. =
+thanks.</span></span></span></div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;">&nbsp;</div>
+
+<div class=3D"Body" style=3D"border: medium;"><span =
+style=3D"font-family:Courier New,Courier,monospace;"><span =
+style=3D"font-size:12pt"><span style=3D"">XXXXX END =
+XXXXX</span></span></span></div>
+<!--open_img--><img =
+src=3D"https://nonsensenyc.com/cgi-bin/dada/mail.cgi/spacer_image/nonsense=
+nyc/20231124072643/9e4766dd0dc28a353e774d80ee2b6c09/spacer.png" =
+width=3D"1" height=3D"1" alt=3D""><!--/open_img-->
+</div>
+
+</div></blockquote></div><br></body></html>=
+
+--Apple-Mail=_0547E371-F069-457F-9D51-476DB5D8ACEE--
