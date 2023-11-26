@@ -5,6 +5,7 @@
   // Disable the default formatter
   "prettier.enable": false,
   "editor.formatOnSave": false,
+  "editor.tabSize": 2,
   "typescript.format.enable": false,
 
   // Auto fix

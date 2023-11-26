@@ -27,6 +27,8 @@ export interface BunFunPropsWithoutFunctionUrl extends BunFunPropsBase {
 type BunFunProps = BunFunPropsWithFunctionUrl | BunFunPropsWithoutFunctionUrl;
 
 export class BunFun extends Construct {
+  public lambda!: Function;
+
   constructor(scope: Construct, id: string, props: BunFunProps) {
     super(scope, id);
 
@@ -46,14 +48,14 @@ export class BunFun extends Construct {
           bunPath = path.dirname(props.entrypoint);
         }
 
-        const BunFunLayerArn = Fn.importValue('BunFunLayerArn') ?? props.bunLayer;
+        const BunFunLayerArn = props.bunLayer ?? Fn.importValue('BunFunLayerArn');
         const layer = LayerVersion.fromLayerVersionArn(
           this,
           'imported-BunFunLayerVersion',
           BunFunLayerArn,
         );
 
-        const lambda = new Function(this, 'BunFunction', {
+        this.lambda = new Function(this, 'BunFunction', {
           code: Code.fromAsset(bunPath),
           handler: props.handler,
           runtime: Runtime.PROVIDED_AL2,
@@ -61,7 +63,7 @@ export class BunFun extends Construct {
           architecture: Architecture.ARM_64,
         });
 
-        lambda.addToRolePolicy(
+        this.lambda.addToRolePolicy(
           new PolicyStatement({
             actions: ['lambda:GetLayerVersion'],
             resources: [BunFunLayerArn],
@@ -69,13 +71,13 @@ export class BunFun extends Construct {
         );
 
         if (props.functionsUrl) {
-          lambda.addPermission('InvokeFunctionsUrl', {
+          this.lambda.addPermission('InvokeFunctionsUrl', {
             principal: new AnyPrincipal(),
             action: 'lambda:InvokeFunctionUrl',
             functionUrlAuthType: props.functionUrlAuthType,
           });
 
-          const fnUrl = lambda.addFunctionUrl({
+          const fnUrl = this.lambda.addFunctionUrl({
             authType: props.functionUrlAuthType,
           });
 
