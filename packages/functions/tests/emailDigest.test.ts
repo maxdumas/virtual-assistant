@@ -1,4 +1,3 @@
-import { join } from 'node:path';
 import { createReadStream } from 'node:fs';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { mockClient } from 'aws-sdk-client-mock';
