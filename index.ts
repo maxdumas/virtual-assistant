@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { VirtualAssistant } from './infra/virtual-assistant';
+import { VirtualAssistantStack } from './infra/virtual-assistant-stack';
 
 const app = new cdk.App();
-new VirtualAssistant(app, 'VirtualAssistant');
+new VirtualAssistantStack(app, 'VirtualAssistant');

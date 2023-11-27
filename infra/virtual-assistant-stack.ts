@@ -18,7 +18,7 @@ import { BunFunLayerStack } from './bun-fun-layer-stack';
 
 const lambdaDir = path.join(import.meta.dir, '../packages/functions/src');
 
-export class VirtualAssistant extends Stack {
+export class VirtualAssistantStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
