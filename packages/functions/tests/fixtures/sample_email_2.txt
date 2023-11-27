@@ -1,0 +1,673 @@
+Return-Path: <maltor124@gmail.com>
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+ by inbound-smtp.us-east-1.amazonaws.com with SMTP id ivskgs0mcstjghojqfpsnhf0638m3o2m4g69t801
+ for events@va.dumas.nyc;
+ Mon, 27 Nov 2023 01:55:47 +0000 (UTC)
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.160.177 as permitted sender) client-ip=209.85.160.177; envelope-from=maltor124@gmail.com; helo=mail-qt1-f177.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.160.177 as permitted sender) client-ip=209.85.160.177; envelope-from=maltor124@gmail.com; helo=mail-qt1-f177.google.com;
+ dkim=pass header.i=@gmail.com;
+ dmarc=pass header.from=gmail.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFHT1ZHejNHUTZDS1VDMVE2dVVCRk5raERQZWhmMW9JUk4waTROK0VHdWNWT1J1aHplLzhjRGxqVWw3OWVraU8vclZPTWxZdGtaTXV2dHAzSUhpVkpDamt1d01reDBWdlNOeHVvbEZnWklmZTRpajBIaDlNNjZZYXlodERhRGQyTXU0aFdPRkFZTmJSM0RDZzliMS9Kd0lWMEU4TmdER1dmMGVjU1FRbTczbzRGSEJZSldGckN2TEZOSXZxMnVmQnRNZHRNQ2wvWWZXbktvSmpOUGZxNUEzOWJKZzRVaHFmYXRoOVFjOUwwbmkvWXVEdXB4bEZac3lrNCsyUzQ3Ri9NdDdrYy8wTitHUWlVd0cySjgwK3NCaEN4cWg4Q2prTld6Y2hMUWlvNnY3OUE9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=VYcryqxR4xlZlL0bTTmROaBTNX66HLTWDptF0XUCahXO0U/Lzn5Uiye1TFIdMbYwohcz6czUB8froo2weIrcDgPInkigP3BQTqXXchvYkrp7QFaX6wsxhpS3fktyzgUmmvGE/81X/+1nYWHysHYElgXtCWD57pJYfFnjSsHDxEQ=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1701050147; v=1; bh=5Lqu0Ex9QZFQj5CX/mm8yaCLCvlndiA1uNCjpfZSbUs=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4219f89ee21so21184971cf.3
+        for <events@va.dumas.nyc>; Sun, 26 Nov 2023 17:55:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701050146; x=1701654946; darn=va.dumas.nyc;
+        h=date:to:references:message-id:subject:mime-version:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GMysVz2Cj1oUZKMvLOYwoaJXl30KJ3BMQjWsH0kUr+Y=;
+        b=FIzEEd05boqyn324Sm3avWZSLiFG3nFXM+S5PxIa4m0152PyhVLUkxsJfAkgWI5JSo
+         36P5PDUfLH32YkP2MnE1EQABdEmjYqb1GEULFLy68l0bCWkltGV4eLsj0Db0+IXwgzaU
+         acM2RY3UUF7f9QK7wbHX+Xw1zswzb23EPBFodpcNvxsLn/aOsnLq+Ruo6kPCTBt2BoWA
+         QWoIPoFUcV7bTUHDxF/Lco3+xDfiDVXV4q3PKmmdTKN/f2VCTFLFDPlaFuT1UiD0eo6h
+         zkIAzOeacJNQMWEYUWWiMcRO47PSgWH0Him2+cjmTT5X6B9gsYV+KkGuLmylC3F6nuXM
+         DxrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701050146; x=1701654946;
+        h=date:to:references:message-id:subject:mime-version:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GMysVz2Cj1oUZKMvLOYwoaJXl30KJ3BMQjWsH0kUr+Y=;
+        b=F6Rs/tkXWZx96adZnY+U6guVmEOurOPB1s7nfMq2IYFjrxqc00NzDQcMWGzALA+PrN
+         O43OFFc/75OMI3WX6yKL+9f6nICa8ljtMwuf6mJJn0EZAQo7Pjbme+n7uSji9scOd+G1
+         u80rsT5NaIwROjQgiUF8feAlAyqTjX043TbMkd8I6CAkKJLfbTqXScWYz6bR37CO3fkW
+         uAbV0+2qIDyLjVAJS6VDYvFlVw6wCUUgKErJFaeyq6vv6ELGGV81BfA6VsxT7WL3D+Zz
+         o1Ro6X6yP+IJd6AdeHZ49TUon0jaM6f0z2Y3Pgf3t18NOu8HTHGmHAz+I7VSobT3xaxo
+         KH+w==
+X-Gm-Message-State: AOJu0YxQ52WjXUmaDZ4tOZQBrKx4f3FHEPhMYQ3rvEHJux/V1VJ2O7Ri
+	G604Uoo/Jayyt/TZ+SBZmTubqNCcbIs=
+X-Google-Smtp-Source: AGHT+IGuu+yLFy5XENiCiXSAp5a7KwASAa680GDZw5gdQqu2P6HxaRXyJDvg2vZQX+gZ/8q3bz1y1g==
+X-Received: by 2002:a05:622a:5107:b0:423:a009:ea9d with SMTP id ev7-20020a05622a510700b00423a009ea9dmr10809961qtb.3.1701050146197;
+        Sun, 26 Nov 2023 17:55:46 -0800 (PST)
+Return-Path: <maltor124@gmail.com>
+Received: from smtpclient.apple ([2a09:bac5:a6f0:1973::289:c6])
+        by smtp.gmail.com with ESMTPSA id z15-20020ac8454f000000b00419732075b4sm3349716qtn.84.2023.11.26.17.55.45
+        for <events@va.dumas.nyc>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 Nov 2023 17:55:45 -0800 (PST)
+From: Max Dumas <maltor124@gmail.com>
+X-Google-Original-From: Max Dumas <max@dumas.nyc>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_031CC859-C03B-488A-AD2A-1D4B2B908CBD"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+Subject: Fwd: SUN-WEDS, 1/1-4: SKINT NEW YEAR'S WEEK
+Message-Id: <93A83D16-5921-4458-BAF8-57AD1543E268@dumas.nyc>
+References: <1511f88cf5881c0bbe69e6d70.e0968caaf3.20221230210849.4d3d3a98d5.aaa8f130@mail35.atl31.mcdlv.net>
+To: events@va.dumas.nyc
+Date: Sun, 26 Nov 2023 20:55:35 -0500
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
+
+
+--Apple-Mail=_031CC859-C03B-488A-AD2A-1D4B2B908CBD
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+
+
+> Begin forwarded message:
+>=20
+> From: "the skint" <newsletter@theskint.com>
+> Subject: SUN-WEDS, 1/1-4: SKINT NEW YEAR'S WEEK
+> Date: December 30, 2022 at 4:08:57=E2=80=AFPM EST
+> To: <maltor124@gmail.com>
+> Reply-To: "the skint" <newsletter@theskint.com>
+>=20
+> forward to a friend =
+<https://us8.forward-to-friend.com/forward?u=3D1511f88cf5881c0bbe69e6d70&i=
+d=3D4d3d3a98d5&e=3De0968caaf3>  |  view in browser =
+<https://mailchi.mp/0237ec42a41d/sun-weds-11-4-skint-new-years-week?e=3De0=
+968caaf3>
+> SUN-WEDS, 1/1-4: SKINT NEW YEAR=E2=80=99S WEEK
+>=20
+>  =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D8e3fe6d968&e=3De0968caaf3>
+> sunday
+>=20
+> sun (various times): new year=E2=80=99s day hikes: begin the new year =
+with some fresh air on park walks led by the urban park rangers in each =
+borough. free. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D77082e8b0d&e=3De0968caaf3>
+> sun 11am: coney island polar bear club=E2=80=99s annual new year=E2=80=99=
+s day plunge: dive into the new year at the coney island polar bear =
+club=E2=80=99s 120th annual community dip in the chilly atlantic. free =
+to watch or participate (donations will benefit local organizations). >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D5da2f39d85&e=3De0968caaf3>
+> sun 1-5pm: coney island circus sideshow: after drying off from the =
+plunge, catch a performance of the world famous coney island circus =
+sideshow at sideshows by the seashore. $15. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Dfb10e587a4&e=3De0968caaf3>
+> sun 2pm: taproom silent disco: sweat it all out at a 60-minute cardio =
+dance party held at taproom talea beer co. (williamsburg), and reward =
+yourself with a draft, which is included in the $20 ticket. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D72120dcee5&e=3De0968caaf3>
+> sun 2pm-1am: the poetry project=E2=80=99s 49th annual new year=E2=80=99s=
+ day marathon: the word is out: 150+ poets and performers will read at =
+the poetry project=E2=80=99s annual benefit, taking place over two =
+five-hour blocks in person at st. mark=E2=80=99s church-in-the-bowery =
+($25-30) and online ($1-15 suggested donation). >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D7d5bfeafe8&e=3De0968caaf3>
+> sun 6pm-2am: 718 sessions new year=E2=80=99s day bash: kick off the =
+new year with disco, soul, funk, and house at danny krivit=E2=80=99s =
+annual new year=E2=80=99s day dance party. good room (greenpoint), $5 =
+for the first 100 folks before 7pm, $15-25 otherwise. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D5e0080e851&e=3De0968caaf3>
+> sun 7pm: 19th annual new year=E2=80=99s hank-o-rama: the lonesome =
+prairie dogs, tammy faye starlite, alex battles, sean kershaw, and many =
+more pay musical tribute to influential country singer hank williams on =
+the 70th anniversary of his passing. the bowery electric (east village), =
+$12 adv, $15 door. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Dad91e8fb4d&e=3De0968caaf3>
+> tuesday
+>=20
+> tues 8:30pm (weekly): i made you a playlist: stand-up meets =
+after-party at this weekly comedy show and dance party, hosted by kelly =
+bachman. tonight=E2=80=99s show features dayton bissett, andrea allen, =
+jared waters, jess feeney, zahid dewji, and cansu. the three diamond =
+door (bushwick), free admission. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Dc1de194f6d&e=3De0968caaf3>
+> tues 8:30pm (weekly): just come! comedy show: pamela ross, ashley =
+hamilton, and nolawee mengist bring the laughs back to east williamsburg =
+with standup by kenice mobley (fallon), billy prinsell (comedy =
+central=E2=80=99s comics to watch), charles mcbee (mtv), jilberto soto, =
+and adam gilbert. the graham (east williamsburg), free ($10 suggested =
+donation). >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Df1ac56e8f5&e=3De0968caaf3>
+> wednesday
+>=20
+> weds thru 2/1 (wednesdays): cin=C3=A9polis handpicked: cin=C3=A9polis =
+chelsea screens defending your life, the wizard of oz, the matrix, the =
+matrix reloaded, and the matrix revolutions for just $5 each. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D9038925c4f&e=3De0968caaf3>
+> weds thru 1/31: janartsnyc: more than 45,000 performing arts leaders, =
+artists, and enthusiasts from across the globe converge for janartsnyc, =
+a series of festivals presenting new work in theater, dance, opera, =
+music, and performance scheduled around the annual association of =
+performing arts presenters (apap) conference. various locations and =
+prices. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D10ff042cc6&e=3De0968caaf3>
+> weds thru 1/29: guillermo del toro: tales of mourning and imagination: =
+in conjunction with the exhibition guillermo del toro: crafting =
+pinocchio, the museum of modern art presents a retrospective of 25 =
+theatrical releases and television series directed by the filmmaker, =
+along with others he wrote and produced. museum of modern art (midtown), =
+$12 general, $10 seniors, $8 students. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D232ff3fa90&e=3De0968caaf3>
+> weds 7pm (monthly thru june): scicafe: sewer surveillance to track =
+viruses in nyc: at tonight=E2=80=99s edition of =E2=80=98scicafe,=E2=80=99=
+ the american museum of natural history=E2=80=99s evening conversation =
+series, new york city department of environmental protection=E2=80=99s =
+director of regulatory compliance jonathan hoffman will share how =
+wastewater can be used to identify infection hotspots, why surveying =
+sewers is important, and what public health officials can do with this =
+information. cullman hall of the universe at the american museum of =
+natural history (uws), free (rsvp). >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Ddfb06bb4e0&e=3De0968caaf3>
+> weds 7pm: speakeasy: =E2=80=98the definitive speechwriting comedy =
+show=E2=80=99: former presidential speechwriters and comedians who like =
+speeches talk about the techniques they love, the clich=C3=A9s they =
+hate, and the written remarks that rocked their world. hosted by =
+chandler dean and sarah gruen. caveat (les), $10 adv with promo code =
+=E2=80=98speakcheaply=E2=80=99 (reg. $15 adv, $20 door). >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D56d6a9b921&e=3De0968caaf3>
+> weds 7:30pm (weekly): we have fun: a stand-up show: hosts zach sims =
+and dan wilbur bring the fun-ny to young ethel=E2=80=99s (park slope), =
+with stand-up by comedians ariel elias (kimmel), wilfred padua (npr), =
+christian mangual, and whitney allen. free admission. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D6c7415459b&e=3De0968caaf3>
+> weds 8pm (weekly): savage comedy show: lizzie martinez and melissa =
+rocha=E2=80=99s stand-up show comes roaring back with sets by moss =
+perricone (patriot act), django gold (colbert), zilla vodnas (the new =
+york times), sam morrison (drew barrymore show), chlo=C3=A9 cunha (the =
+onion), and brittany cardwell. bonus: free beer giveaways from victory =
+brewing. logan=E2=80=99s run (park slope), free admission. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Def6b2e8e6e&e=3De0968caaf3>
+> ongoing
+>=20
+> our roundup of 40+ ongoing events and attractions: art exhibitions, =
+ticket deals, and more. >> =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3Dae49e5665b&e=3De0968caaf3>
+> stay safe and healthy
+> =E2=80=93 the skint
+>=20
+> forward to a friend =
+<https://us8.forward-to-friend.com/forward?u=3D1511f88cf5881c0bbe69e6d70&i=
+d=3D4d3d3a98d5&e=3De0968caaf3>
+> share  =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3De91a96d7a3&e=3De0968caaf3>  =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D3a80c12a4d&e=3De0968caaf3>  =
+<https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D89d519d1f4&e=3De0968caaf3>
+> copyright =C2=A9 2022 the skint, all rights reserved.
+> you are receiving this email because you subscribed for email updates =
+from the skint - the best free and cheap things to do in new york city. =
+every day.
+>=20
+> our mailing address is:
+> the skint 320 7th avenue brooklyn, ny 11215 USA
+>=20
+> unsubscribe from this list =
+<https://theskint.us8.list-manage.com/unsubscribe?u=3D1511f88cf5881c0bbe69=
+e6d70&id=3D39448ae3bb&e=3De0968caaf3&c=3D4d3d3a98d5>  |  view email in =
+browser =
+<https://mailchi.mp/0237ec42a41d/sun-weds-11-4-skint-new-years-week?e=3De0=
+968caaf3>
+
+--Apple-Mail=_031CC859-C03B-488A-AD2A-1D4B2B908CBD
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"overflow-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;"><br =
+id=3D"lineBreakAtBeginningOfMessage"><div><br><blockquote =
+type=3D"cite"><div>Begin forwarded message:</div><br =
+class=3D"Apple-interchange-newline"><div style=3D"margin-top: 0px; =
+margin-right: 0px; margin-bottom: 0px; margin-left: 0px;"><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif; color:rgba(0, 0, 0, 1.0);"><b>From: </b></span><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif;">"the skint" =
+&lt;newsletter@theskint.com&gt;<br></span></div><div style=3D"margin-top: =
+0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px;"><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif; color:rgba(0, 0, 0, 1.0);"><b>Subject: </b></span><span =
+style=3D"font-family: -webkit-system-font, Helvetica Neue, Helvetica, =
+sans-serif;"><b>SUN-WEDS, 1/1-4: SKINT NEW YEAR'S =
+WEEK</b><br></span></div><div style=3D"margin-top: 0px; margin-right: =
+0px; margin-bottom: 0px; margin-left: 0px;"><span style=3D"font-family: =
+-webkit-system-font, Helvetica Neue, Helvetica, sans-serif; =
+color:rgba(0, 0, 0, 1.0);"><b>Date: </b></span><span style=3D"font-family:=
+ -webkit-system-font, Helvetica Neue, Helvetica, sans-serif;">December =
+30, 2022 at 4:08:57=E2=80=AFPM EST<br></span></div><div =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px;"><span style=3D"font-family: -webkit-system-font, =
+Helvetica Neue, Helvetica, sans-serif; color:rgba(0, 0, 0, 1.0);"><b>To: =
+</b></span><span style=3D"font-family: -webkit-system-font, Helvetica =
+Neue, Helvetica, =
+sans-serif;">&lt;maltor124@gmail.com&gt;<br></span></div><div =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px;"><span style=3D"font-family: -webkit-system-font, =
+Helvetica Neue, Helvetica, sans-serif; color:rgba(0, 0, 0, =
+1.0);"><b>Reply-To: </b></span><span style=3D"font-family: =
+-webkit-system-font, Helvetica Neue, Helvetica, sans-serif;">"the skint" =
+&lt;newsletter@theskint.com&gt;<br></span></div><br><div><meta =
+charset=3D"UTF-8"><center style=3D"caret-color: rgb(0, 0, 0); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; =
+font-style: normal; font-variant-caps: normal; font-weight: 400; =
+letter-spacing: normal; text-indent: 0px; text-transform: none; =
+white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px; =
+background-color: rgb(255, 255, 255); text-decoration: none;"><table =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" =
+id=3D"backgroundTable" style=3D"margin: 0px; padding: 0px; height: =
+2771.390625px; width: 1103px;"><tbody><tr><td align=3D"center" =
+valign=3D"top" style=3D"background-color: rgb(255, 255, 255); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; =
+line-height: 24px;"><table border=3D"0" cellpadding=3D"0" =
+cellspacing=3D"0" width=3D"600"><tbody><tr><td class=3D"prepost" =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px;"><table border=3D"0" cellpadding=3D"5" cellspacing=3D"0" =
+width=3D"100%"><tbody><tr><td style=3D"background-color: rgb(255, 255, =
+255); font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: =
+15px; line-height: 24px;"><div style=3D"background-color: rgb(255, 255, =
+255); font-family: &quot;Trebuchet MS&quot;, sans-serif; color: rgb(170, =
+170, 170); font-size: 11px; line-height: 24px; text-align: center; =
+padding: 5px 0px;"><a =
+href=3D"https://us8.forward-to-friend.com/forward?u=3D1511f88cf5881c0bbe69=
+e6d70&amp;id=3D4d3d3a98d5&amp;e=3De0968caaf3" title=3D"forward this =
+email to a friend" target=3D"_blank" style=3D"font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; color: rgb(255, 102, 0) =
+!important; font-size: 11px; line-height: 24px; text-decoration: none; =
+text-align: center; padding: 5px 0px;">forward to a =
+friend</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a =
+href=3D"https://mailchi.mp/0237ec42a41d/sun-weds-11-4-skint-new-years-week=
+?e=3De0968caaf3" title=3D"view this email in a browser" target=3D"_blank" =
+style=3D"font-family: &quot;Trebuchet MS&quot;, sans-serif; color: =
+rgb(255, 102, 0) !important; font-size: 11px; line-height: 24px; =
+text-decoration: none; text-align: center; padding: 5px 0px;">view in =
+browser</a></div></td></tr></tbody></table></td></tr><tr><td =
+class=3D"content" style=3D"background-color: rgb(255, 255, 255); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; =
+line-height: 24px;"><table border=3D"0" cellpadding=3D"5" =
+cellspacing=3D"0" width=3D"100%"><tbody><tr><td valign=3D"top" =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px;"><div style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px;"><header><h1 style=3D"color: rgb(255, 102, 0); display: block; =
+font-size: 20px; font-weight: normal;"><a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D8e3fe6d968&amp;e=3De0968caaf3" rel=3D"bookmark" =
+style=3D"font-family: &quot;Trebuchet MS&quot;, sans-serif; color: =
+rgb(255, 102, 0) !important; font-size: 20px; line-height: 24px; =
+text-decoration: none; display: block; font-weight: normal;">SUN-WEDS, =
+1/1-4: SKINT NEW YEAR=E2=80=99S WEEK</a></h1></header><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;"><strong><u style=3D"font-size: 19px; =
+line-height: 2;">sunday</u></strong></p><p style=3D"background-color: =
+rgb(255, 255, 255); font-family: &quot;Trebuchet MS&quot;, sans-serif; =
+font-size: 15px; line-height: 24px; padding: 6px 0px !important;">sun =
+(various times):&nbsp;<strong>new year=E2=80=99s day hikes</strong>: =
+begin the new year with some fresh air on park walks led by the urban =
+park rangers in each borough. free.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D77082e8b0d&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">sun 11am:&nbsp;<strong>coney island =
+polar bear club=E2=80=99s annual new year=E2=80=99s day plunge</strong>: =
+dive into the new year at the coney island polar bear club=E2=80=99s =
+120th annual community dip in the chilly atlantic. free to watch or =
+participate (donations will benefit local organizations).&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D5da2f39d85&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">sun 1-5pm:&nbsp;<strong>coney island =
+circus sideshow</strong>: after drying off from the plunge, catch a =
+performance of the world famous coney island circus sideshow at =
+sideshows by the seashore. $15.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Dfb10e587a4&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">sun 2pm:&nbsp;<strong>taproom silent =
+disco</strong>: sweat it all out at a 60-minute cardio dance party held =
+at taproom talea beer co. (williamsburg), and reward yourself with a =
+draft, which is included in the $20 ticket.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D72120dcee5&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">sun 2pm-1am:&nbsp;<strong>the poetry =
+project=E2=80=99s 49th annual new year=E2=80=99s day marathon</strong>: =
+the word is out: 150+ poets and performers will read at the poetry =
+project=E2=80=99s annual benefit, taking place over two five-hour blocks =
+in person at st. mark=E2=80=99s church-in-the-bowery ($25-30) and online =
+($1-15 suggested donation).&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D7d5bfeafe8&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">sun 6pm-2am:&nbsp;<strong>718 =
+sessions new year=E2=80=99s day bash</strong>: kick off the new year =
+with disco, soul, funk, and house at danny krivit=E2=80=99s annual new =
+year=E2=80=99s day dance party. good room (greenpoint), $5 for the first =
+100 folks before 7pm, $15-25 otherwise.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D5e0080e851&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">sun 7pm:&nbsp;<strong>19th annual =
+new year=E2=80=99s hank-o-rama</strong>: the lonesome prairie dogs, =
+tammy faye starlite, alex battles, sean kershaw, and many more pay =
+musical tribute to influential country singer hank williams on the 70th =
+anniversary of his passing. the bowery electric (east village), $12 adv, =
+$15 door.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Dad91e8fb4d&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;"><strong><u style=3D"font-size: 19px; =
+line-height: 2;">tuesday</u></strong></p><p style=3D"background-color: =
+rgb(255, 255, 255); font-family: &quot;Trebuchet MS&quot;, sans-serif; =
+font-size: 15px; line-height: 24px; padding: 6px 0px !important;">tues =
+8:30pm (weekly):&nbsp;<strong>i made you a playlist</strong>: stand-up =
+meets after-party at this weekly comedy show and dance party, hosted by =
+kelly bachman. tonight=E2=80=99s show features dayton bissett, andrea =
+allen, jared waters, jess feeney, zahid dewji, and cansu. the three =
+diamond door (bushwick), free admission.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Dc1de194f6d&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">tues 8:30pm =
+(weekly):&nbsp;<strong>just come! comedy show</strong>: pamela ross, =
+ashley hamilton, and nolawee mengist bring the laughs back to east =
+williamsburg with standup by kenice mobley (<em>fallon</em>), billy =
+prinsell (comedy central=E2=80=99s comics to watch), charles mcbee =
+(mtv), jilberto soto, and adam gilbert. the graham (east williamsburg), =
+free ($10 suggested donation).&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Df1ac56e8f5&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;"><strong><u style=3D"font-size: 19px; =
+line-height: 2;">wednesday</u></strong></p><p style=3D"background-color: =
+rgb(255, 255, 255); font-family: &quot;Trebuchet MS&quot;, sans-serif; =
+font-size: 15px; line-height: 24px; padding: 6px 0px !important;">weds =
+thru 2/1 (wednesdays):&nbsp;<strong>cin=C3=A9polis handpicked</strong>: =
+cin=C3=A9polis chelsea screens&nbsp;<em>defending your life, the wizard =
+of oz, the matrix, the matrix reloaded</em>, and&nbsp;<em>the matrix =
+revolutions</em>&nbsp;for just $5 each.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D9038925c4f&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">weds thru =
+1/31:&nbsp;<strong>janartsnyc</strong>: more than 45,000 performing arts =
+leaders, artists, and enthusiasts from across the globe converge for =
+janartsnyc, a series of festivals presenting new work in theater, dance, =
+opera, music, and performance scheduled around the annual association of =
+performing arts presenters (apap) conference. various locations and =
+prices.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D10ff042cc6&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">weds thru =
+1/29:&nbsp;<strong>guillermo del toro: tales of mourning and =
+imagination</strong>: in conjunction with the =
+exhibition&nbsp;<em>guillermo del toro: crafting pinocchio</em>, the =
+museum of modern art presents a retrospective of 25 theatrical releases =
+and television series directed by the filmmaker, along with others he =
+wrote and produced. museum of modern art (midtown), $12 general, $10 =
+seniors, $8 students.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D232ff3fa90&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">weds 7pm (monthly thru =
+june):&nbsp;<strong>scicafe: sewer surveillance to track viruses in =
+nyc</strong>: at tonight=E2=80=99s edition of =E2=80=98scicafe,=E2=80=99 =
+the american museum of natural history=E2=80=99s evening conversation =
+series, new york city department of environmental protection=E2=80=99s =
+director of regulatory compliance jonathan hoffman will share how =
+wastewater can be used to identify infection hotspots, why surveying =
+sewers is important, and what public health officials can do with this =
+information. cullman hall of the universe at the american museum of =
+natural history (uws), free (rsvp).&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Ddfb06bb4e0&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">weds 7pm:&nbsp;<strong>speakeasy: =
+=E2=80=98the definitive speechwriting comedy show=E2=80=99</strong>: =
+former presidential speechwriters and comedians who like speeches talk =
+about the techniques they love, the clich=C3=A9s they hate, and the =
+written remarks that rocked their world. hosted by chandler dean and =
+sarah gruen. caveat (les), $10 adv with promo code =E2=80=98speakcheaply=E2=
+=80=99 (reg. $15 adv, $20 door).&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D56d6a9b921&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">weds 7:30pm =
+(weekly):&nbsp;<strong>we have fun: a stand-up show</strong>: hosts zach =
+sims and dan wilbur bring the fun-ny to young ethel=E2=80=99s (park =
+slope), with stand-up by comedians ariel elias (<em>kimmel</em>), =
+wilfred padua (npr), christian mangual, and whitney allen. free =
+admission.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D6c7415459b&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;">weds 8pm =
+(weekly):&nbsp;<strong>savage comedy show</strong>: lizzie martinez and =
+melissa rocha=E2=80=99s stand-up show comes roaring back with sets by =
+moss perricone (<em>patriot act</em>), django gold (<em>colbert</em>), =
+zilla vodnas (<em>the new york times</em>), sam morrison (<em>drew =
+barrymore show</em>), chlo=C3=A9 cunha (<em>the onion</em>), and =
+brittany cardwell. bonus: free beer giveaways from victory brewing. =
+logan=E2=80=99s run (park slope), free admission.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Def6b2e8e6e&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;"><strong><u style=3D"font-size: 19px; =
+line-height: 2;">ongoing</u></strong></p><p style=3D"background-color: =
+rgb(255, 255, 255); font-family: &quot;Trebuchet MS&quot;, sans-serif; =
+font-size: 15px; line-height: 24px; padding: 6px 0px =
+!important;"><strong>our roundup of 40+ ongoing events and =
+attractions</strong>: art exhibitions, ticket deals, and more.&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3Dae49e5665b&amp;e=3De0968caaf3" rel=3D"noopener" =
+target=3D"_blank" style=3D"font-family: &quot;Trebuchet MS&quot;, =
+sans-serif; color: rgb(255, 102, 0) !important; font-size: 15px; =
+line-height: 24px; text-decoration: none;"><strong><font =
+color=3D"#FF6600">&gt;&gt;</font></strong></a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px; padding: 6px 0px !important;"><em>stay safe and =
+healthy</em><br><em>=E2=80=93 the =
+skint</em></p></div></td></tr></tbody></table></td></tr><tr><td =
+class=3D"footer" style=3D"background-color: rgb(255, 255, 255); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; =
+line-height: 24px;"><div style=3D"background-color: rgb(255, 255, 255); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; color: rgb(170, 170, =
+170); font-size: 15px; line-height: 24px;"><p style=3D"background-color: =
+rgb(255, 255, 255); font-family: &quot;Trebuchet MS&quot;, sans-serif; =
+color: rgb(170, 170, 170); font-size: 15px; line-height: 24px;"><a =
+href=3D"https://us8.forward-to-friend.com/forward?u=3D1511f88cf5881c0bbe69=
+e6d70&amp;id=3D4d3d3a98d5&amp;e=3De0968caaf3" title=3D"forward this =
+email to a friend" target=3D"_blank" style=3D"font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; color: rgb(255, 102, 0) =
+!important; font-size: 15px; line-height: 24px; text-decoration: none; =
+font-weight: bold;">forward to a friend</a></p><p =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; color: rgb(170, 170, 170); =
+font-size: 15px; line-height: 24px;">share&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3De91a96d7a3&amp;e=3De0968caaf3" title=3D"share the =
+skint on facebook" target=3D"_blank" style=3D"font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; color: rgb(255, 102, 0) =
+!important; font-size: 15px; line-height: 24px; text-decoration: none; =
+font-weight: bold;"><img alt=3D"facebook" border=3D"0" =
+src=3D"https://cache.addthiscdn.com/icons/v1/thumbs/facebook.gif" =
+style=3D"border: 0px;"></a>&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D3a80c12a4d&amp;e=3De0968caaf3" title=3D"share the =
+skint on twitter" target=3D"_blank" style=3D"font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; color: rgb(255, 102, 0) =
+!important; font-size: 15px; line-height: 24px; text-decoration: none; =
+font-weight: bold;"><img alt=3D"twitter" border=3D"0" =
+src=3D"https://cache.addthiscdn.com/icons/v1/thumbs/twitter.gif" =
+style=3D"border: 0px;"></a>&nbsp;<a =
+href=3D"https://theskint.us8.list-manage.com/track/click?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D89d519d1f4&amp;e=3De0968caaf3" title=3D"more =
+sharing options" target=3D"_blank" style=3D"font-family: &quot;Trebuchet =
+MS&quot;, sans-serif; color: rgb(255, 102, 0) !important; font-size: =
+15px; line-height: 24px; text-decoration: none; font-weight: bold;"><img =
+alt=3D"more..." border=3D"0" =
+src=3D"https://cache.addthiscdn.com/icons/v1/thumbs/more.gif" =
+style=3D"border: 0px;"></a></p><div class=3D"copyright" =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; color: rgb(170, 170, 170); =
+font-size: 15px; line-height: 24px;"><p style=3D"background-color: =
+rgb(255, 255, 255); font-family: &quot;Trebuchet MS&quot;, sans-serif; =
+color: rgb(170, 170, 170); font-size: 12px; line-height: =
+15px;"><em>copyright =C2=A9 2022 the skint, all rights =
+reserved.</em><br>you are receiving this email because you subscribed =
+for email updates from the skint - the best free and cheap things to do =
+in new york city. every day.<br><br><strong>our mailing address =
+is:</strong><br>the skint 320 7th avenue brooklyn, ny 11215 =
+USA</p></div></div></td></tr><tr><td class=3D"prepost" =
+style=3D"background-color: rgb(255, 255, 255); font-family: =
+&quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; line-height: =
+24px;"><table border=3D"0" cellpadding=3D"5" cellspacing=3D"0" =
+width=3D"100%"><tbody><tr><td style=3D"background-color: rgb(255, 255, =
+255); font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: =
+15px; line-height: 24px;"><div style=3D"background-color: rgb(255, 255, =
+255); font-family: &quot;Trebuchet MS&quot;, sans-serif; color: rgb(170, =
+170, 170); font-size: 11px; line-height: 24px; text-align: center; =
+padding: 5px 0px;"><a =
+href=3D"https://theskint.us8.list-manage.com/unsubscribe?u=3D1511f88cf5881=
+c0bbe69e6d70&amp;id=3D39448ae3bb&amp;e=3De0968caaf3&amp;c=3D4d3d3a98d5" =
+title=3D"unsubscribe from this list" target=3D"_blank" =
+style=3D"font-family: &quot;Trebuchet MS&quot;, sans-serif; color: =
+rgb(255, 102, 0) !important; font-size: 11px; line-height: 24px; =
+text-decoration: none; text-align: center; padding: 5px =
+0px;">unsubscribe from this list</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a =
+href=3D"https://mailchi.mp/0237ec42a41d/sun-weds-11-4-skint-new-years-week=
+?e=3De0968caaf3" title=3D"view this email in a browser" target=3D"_blank" =
+style=3D"font-family: &quot;Trebuchet MS&quot;, sans-serif; color: =
+rgb(255, 102, 0) !important; font-size: 11px; line-height: 24px; =
+text-decoration: none; text-align: center; padding: 5px 0px;">view email =
+in =
+browser</a></div></td></tr></tbody></table></td></tr></tbody></table></td>=
+</tr></tbody></table></center><img =
+src=3D"https://theskint.us8.list-manage.com/track/open.php?u=3D1511f88cf58=
+81c0bbe69e6d70&amp;id=3D4d3d3a98d5&amp;e=3De0968caaf3" height=3D"1" =
+width=3D"1" alt=3D"" style=3D"border: 0px; caret-color: rgb(0, 0, 0); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; =
+font-style: normal; font-variant-caps: normal; font-weight: 400; =
+letter-spacing: normal; text-align: start; text-indent: 0px; =
+text-transform: none; white-space: normal; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); =
+text-decoration: none;"><span style=3D"caret-color: rgb(0, 0, 0); =
+font-family: &quot;Trebuchet MS&quot;, sans-serif; font-size: 15px; =
+font-style: normal; font-variant-caps: normal; font-weight: 400; =
+letter-spacing: normal; text-align: start; text-indent: 0px; =
+text-transform: none; white-space: normal; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); =
+text-decoration: none; float: none; display: inline =
+!important;"></span></div></blockquote></div><br></body></html>=
+
+--Apple-Mail=_031CC859-C03B-488A-AD2A-1D4B2B908CBD--

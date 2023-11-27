@@ -28,7 +28,7 @@
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^1",
+    "@antfu/eslint-config": "^2",
     "@types/node": "20",
     "aws-cdk": "2.98.0",
     "bun-types": "^1",

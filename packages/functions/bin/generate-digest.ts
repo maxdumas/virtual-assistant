@@ -1,9 +1,4 @@
-import { createReadStream } from 'node:fs';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { mockClient } from 'aws-sdk-client-mock';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-const s3Mock = mockClient(S3Client);
+import { handler } from '../src/emailDigest';
 
 const mockEvent = {
   Records: [
@@ -167,7 +162,7 @@ const mockEvent = {
               type: 'S3',
               topicArn: 'arn:aws:sns:us-east-1:353161589245:VirtualAssistant-EmailReceiptTopicE401841F-NiXxv4wMScYv',
               bucketName: 'virtualassistant-emailstoragebucket61c70ce5-8fhnbydqmh43',
-              objectKey: 'k88489vmck45oc0fbhesk66ursv8s3bqki2hea81',
+              objectKey: 'ivskgs0mcstjghojqfpsnhf0638m3o2m4g69t801',
             },
           },
         }),
@@ -176,26 +171,4 @@ const mockEvent = {
   ],
 };
 
-describe('emailDigest lambda', async () => {
-  describe('handler', () => {
-    beforeEach(() => {
-      s3Mock.reset();
-    });
-
-    it('works', async () => {
-      s3Mock.on(GetObjectCommand).resolves({
-        Body: createReadStream(new URL('./fixtures/sample_email.txt', import.meta.url)) as any,
-      });
-
-      const { handler } = await import('../src/emailDigest');
-      const result = await handler(mockEvent);
-      const text = await result.text();
-      expect(result.status).toEqual(200);
-      expect(text).toContain('here\'s a link to support nonsense all year long');
-    });
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-});
+console.log(await handler(mockEvent));
