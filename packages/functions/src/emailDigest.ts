@@ -140,6 +140,7 @@ export async function handler(event: SQSEvent) {
     const openAiResponse = await openai.chat.completions.create({
       messages: [{ role: 'user', content }],
       model: 'gpt-4-1106-preview',
+      response_format: { type: 'json_object' },
     });
     const openAiMessage = openAiResponse.choices[0].message.content;
 

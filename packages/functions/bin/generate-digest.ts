@@ -13,158 +13,154 @@ const mockEvent = {
       awsRegion: 'us-east-1',
       body: JSON.stringify({
         Message: JSON.stringify({
-          notificationType: 'Received',
-          mail: {
-            timestamp: '2023-11-26T17:45:49.412Z',
-            source: 'maltor124@gmail.com',
-            messageId: 'k88489vmck45oc0fbhesk66ursv8s3bqki2hea81',
-            destination: [
-              'events@va.dumas.nyc',
+          "notificationType": "Received",
+          "mail": {
+            "timestamp": "2023-11-30T00:55:58.359Z",
+            "source": "maltor124@gmail.com",
+            "messageId": "s1to6rtpigvkiq4tv25hf2dffme2pfmcdqu2s401",
+            "destination": [
+              "events@va.dumas.nyc"
             ],
-            headersTruncated: false,
-            headers: [
+            "headersTruncated": false,
+            "headers": [
               {
-                name: 'Return-Path',
-                value: '<maltor124@gmail.com>',
+                "name": "Return-Path",
+                "value": "<maltor124@gmail.com>"
               },
               {
-                name: 'Received',
-                value: 'from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174]) by inbound-smtp.us-east-1.amazonaws.com with SMTP id k88489vmck45oc0fbhesk66ursv8s3bqki2hea81 for events@va.dumas.nyc; Sun, 26 Nov 2023 17:45:49 +0000 (UTC)',
+                "name": "Received",
+                "value": "from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193]) by inbound-smtp.us-east-1.amazonaws.com with SMTP id s1to6rtpigvkiq4tv25hf2dffme2pfmcdqu2s401 for events@va.dumas.nyc; Thu, 30 Nov 2023 00:55:58 +0000 (UTC)"
               },
               {
-                name: 'Received-SPF',
-                value: 'pass (spfCheck: domain of _spf.google.com designates 209.85.222.174 as permitted sender) client-ip=209.85.222.174; envelope-from=maltor124@gmail.com; helo=mail-qk1-f174.google.com;',
+                "name": "Received-SPF",
+                "value": "pass (spfCheck: domain of _spf.google.com designates 209.85.160.193 as permitted sender) client-ip=209.85.160.193; envelope-from=maltor124@gmail.com; helo=mail-qt1-f193.google.com;"
               },
               {
-                name: 'Authentication-Results',
-                value: 'amazonses.com; spf=pass (spfCheck: domain of _spf.google.com designates 209.85.222.174 as permitted sender) client-ip=209.85.222.174; envelope-from=maltor124@gmail.com; helo=mail-qk1-f174.google.com; dkim=pass header.i=@gmail.com; dmarc=pass header.from=gmail.com;',
+                "name": "Authentication-Results",
+                "value": "amazonses.com; spf=pass (spfCheck: domain of _spf.google.com designates 209.85.160.193 as permitted sender) client-ip=209.85.160.193; envelope-from=maltor124@gmail.com; helo=mail-qt1-f193.google.com; dkim=pass header.i=@gmail.com; dmarc=pass header.from=gmail.com;"
               },
               {
-                name: 'X-SES-RECEIPT',
-                value: 'AEFBQUFBQUFBQUFIcU5BZkZvOUdwencwZWllZ2NYMTRjMjNBazV5UVBkVG1pZ0ZMeUNVMkVFMDRzRE1keEtkVDcrc1IwUzh6bW5BWWU1RGFWTy9pYzFpZDEzbk0yN1diRzBHa3d1SHlIMkw4SzRCeUdKNzBtbDFOZkRLbjBNbjkrTnZQWStDaUZQdWxTekdhZUZyNVVLOXNuNDllNExaZTcrcCtId0dzRXhkeVdNcFRCUUVBQThhQXNWQ2JkMVVTWXFKb3RmeUIwRGNDRzJLOUk2WS8yVEhmMzBrL1FaNDRLYzNzWmVpWW9GQWlXNGF3ZE1yMzlyZFI1c3hlRDBqMmNXckk0N1g1ZGJzek15Y2ZSSElyZWsrYmYrNWRlbHpjYm1kdlBCMm1IMGFLNXF1YlRmdE9SaHc9PQ==',
+                "name": "X-SES-RECEIPT",
+                "value": "AEFBQUFBQUFBQUFGY3BVR0FHdUppVkNIYzdkMVFSYVFrSzhpbmxySHY2Tk9kTmd0SnVlSThRK2pZcHZkblhGaitYSDhyZzNXV09UVU5jbVE4cWk0OVRBVkt5T2NwR2g5ZXVuN0ZZZVp4aVlwdnZPR3UrMGRaZkNvR3Q3U3A3aS9VSDY1NW0yWnZiMDdLbUtlcUduNU90bTBxWk5TeFNmR2FwZDFQbnJTODhTRXA0SzZaenBGUzZLNXNGbDlGTDNSUVhET25HWFhYY0t3TmF4eFhmaG43QjFKWHU0VUZNaDRwZWV1NFQyVlRDWWg0aTR6WXJheFh6SjAwTlZXZGlBU25Oc3RNWmIyaU55RGRvbll3YTJkNGdOaTNidEplaDlNZFpHUTk2UThVM2xERHQwL21tY2VDOGc9PQ=="
               },
               {
-                name: 'X-SES-DKIM-SIGNATURE',
-                value: 'a=rsa-sha256; q=dns/txt; b=itezLWYHrPZLZN2qybXTtkJXY2RVMy9+nAXtoCbmmwaRlM8Faz059SNiUrnsNlBCbtSPZaLDSzj6iYrFo3a6mWebBcve8mhFPcVCay/2qsLH/LRrSNDp42ZyJQ9h982x+f3Bd9mbQrutL6jVPbF0W+xFeU1hUb1STVegStVRQbY=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1701020749; v=1; bh=QqxjETmEDyGcsNTlS59qQZlh/3UWNaRffcOHCPD+yT0=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;',
+                "name": "X-SES-DKIM-SIGNATURE",
+                "value": "a=rsa-sha256; q=dns/txt; b=XJR1jDRHIQMw7onMy26l9Fyb5k0QMfsAW68Z/QE9yCuf/Z4vAcXQBpxj0Mdkaz+5K7cZaOJTxdcnrTQ1vUI4GqRPuGIP2OO7zwXv4KLxp7w4ARhL2CKUpmKSiJi9ZbPmciS9MPx68x+32nEX3Dql9MSnTd8ZRFdvHYCYBpiMDA8=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1701305758; v=1; bh=Zzy+k+Dggp5TmeY1KOk/InKhGLRs6zDxPc+iZHxq0AI=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;"
               },
               {
-                name: 'Received',
-                value: 'by mail-qk1-f174.google.com with SMTP id af79cd13be357-77d84f8808dso106223285a.2 for <events@va.dumas.nyc>; Sun, 26 Nov 2023 09:45:49 -0800 (PST)',
+                "name": "Received",
+                "value": "by mail-qt1-f193.google.com with SMTP id d75a77b69052e-423ec1b2982so2438571cf.2 for <events@va.dumas.nyc>; Wed, 29 Nov 2023 16:55:58 -0800 (PST)"
               },
               {
-                name: 'DKIM-Signature',
-                value: 'v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20230601; t=1701020748; x=1701625548; darn=va.dumas.nyc; h=mime-version:message-id:to:references:date:subject:from:from:to:cc:subject:date:message-id:reply-to; bh=vDZpp+BOukSlKK9uRti6EkYlzDuob91Sf6RmLGzxI4k=; b=ORa7O7/IPaJj6FBHg5BYXG4kaiXrl25r6NxuN73IDjH0nl8JcMKZj50nA9O8VhA1DNw8SB9FStpqPujIAS4VeTLrfzskC3odfVyL64SR15HohfPDwdWHaXmE49sxiQ2nlweoxiTdYgoUnS3q3wXff5zB5TMnPffOC5IQvfRIRTQtXLoGiHY+XPq6wMC+/uay4qdOicpeh55qQUUTMYajc50iJWziHP8Y/xRlSnL2uDGH+nv58YLqvoHYE/s4aE2TszqZhN7zpemFAxwjU0vsY+n4lC4jGgen18ei9HelWYlFQJgcuQZsE8txjkRXj0rxH0bZQLE5x8csLc6IC99SWA==',
+                "name": "DKIM-Signature",
+                "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20230601; t=1701305757; x=1701910557; darn=va.dumas.nyc; h=date:to:references:message-id:subject:mime-version:from:from:to:cc:subject:date:message-id:reply-to; bh=OVC/tsvNvFFdkDmFuhYln3O7sWq342Y5S5QLySB5S3I=; b=BLwPticbOd78BuLRTzu8awrZUAu0j5mMNtxmfZGHwFBG4LP2tc4X7GPTyiH92bUTwD7bnoy8m703EAinZ5dfRQa4x5OyoD8c/Xkce2z3aEDXMxMQ9U7G62x8XTY0HlPtvHObsMjTbyFPYyDZSuMJ3APL+lj6wrCkzUgS4nzm5ITHxUNIhgmM5TvsH3H9QoZZ6J2w6+N4pYiD6/c5dbb05QEv2c9jdO203BYH+6PjfZNsp5Hrc1kHgbl+b4IGDMiuO2UpNd1nHKBqMoynP9O0XDVnpfCN4htQAjX2S500bySV4K9Mwshmtw+uqXtB7yapYjpj8l4UpcvuMMmej40E3A=="
               },
               {
-                name: 'X-Google-DKIM-Signature',
-                value: 'v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1701020748; x=1701625548; h=mime-version:message-id:to:references:date:subject:from :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=vDZpp+BOukSlKK9uRti6EkYlzDuob91Sf6RmLGzxI4k=; b=YRZcqbjbVxqvsc6ALxA4W16QqWvuFzoCqqcGCw0c1zI+uIxKCJ1PSsveSH50iJKwyt n+btInE7SxVDcjUy8LDBMV9Aofbv8viOot91dyVaSvnQXbACinYyp3c1BeTdgQzEByT/ dZ4AKT/6UWfmrKs62nsalOYElNkZIue2THfaanXUTgPMKfBsaFv+G2asTlUl0uFSenxB umRMqgaO0/0upSyCwJXYRFHLlSydmyFx9U3H/pxo4Njs9PHMA+dw1/ZmYf4jR9JNY2bV BtoWWXk3AiPRZEU8d75gAZTW+J3DN9xKPTRVCqxJYl42sSnESAKBu/WraUMGNOeV8a1X bfXg==',
+                "name": "X-Google-DKIM-Signature",
+                "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1701305757; x=1701910557; h=date:to:references:message-id:subject:mime-version:from :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=OVC/tsvNvFFdkDmFuhYln3O7sWq342Y5S5QLySB5S3I=; b=cCzai8hzJ4TpyUd+vxR21ZfvRPot9bUlcX8/81E5aGr0fsifpPYlis0Rsutevjerxg Ism2LNYUoq+dCIcdKxpYL9SYFMdGBP7iv+p3O96aGs5oFdYIMseveOMXmBtCTuxed1N+ Ybf/FOB1mAqAuSLV5lWQJIZocnvK7f4LUmZh0pQVQUF4pWtMZfCDKzE9U7oeeeiB3nCn spRQ+80HQipgRDcwe0l/xKWatKA7Ma4/iEkDgENtY0obLeXpk9CWSLoMBRSz637jVktD YYD69Bz7skaZfiFykrLhjc7Q2vqtxUZwEBpjW7o8Oor1fWME8+5EW8QNCn5l6HPZT/zr OrYg=="
               },
               {
-                name: 'X-Gm-Message-State',
-                value: 'AOJu0YyttaVSp2AVXDIi0YCH++d3d24x27WztyJcvlVuH8a+AGYxCEVd itLMhh3jRNfm8H+nmtSu4ezyjAABok0=',
+                "name": "X-Gm-Message-State",
+                "value": "AOJu0Ywzh3CPSH7iG5l5ZBNpBXCxtMpFCkq3oZ8W6FdFZI/MA/URK1HK 6/BkbX/vvjUxVKt9TGkhvIViN3EipQeIyg=="
               },
               {
-                name: 'X-Google-Smtp-Source',
-                value: 'AGHT+IEuDk19UYAZqnUsa700cxFDlBdjL5+6mvtPUjmKXoE7dny1ixFKoxsdDDl4aJdX3eN90dx8iQ==',
+                "name": "X-Google-Smtp-Source",
+                "value": "AGHT+IGRA5/xuPL3i4NiWY+kFi0eFqDFkWwe9OBL4vpHDuGbvYLlTFeSxHGfSc/ptBgYFxG5nnIh2g=="
               },
               {
-                name: 'X-Received',
-                value: 'by 2002:a05:620a:8f01:b0:76f:1eac:e72d with SMTP id rh1-20020a05620a8f0100b0076f1eace72dmr8458402qkn.38.1701020747054; Sun, 26 Nov 2023 09:45:47 -0800 (PST)',
+                "name": "X-Received",
+                "value": "by 2002:ac8:5a51:0:b0:423:74e1:12c0 with SMTP id o17-20020ac85a51000000b0042374e112c0mr24356229qta.61.1701305757197; Wed, 29 Nov 2023 16:55:57 -0800 (PST)"
               },
               {
-                name: 'Return-Path',
-                value: '<maltor124@gmail.com>',
+                "name": "Return-Path",
+                "value": "<maltor124@gmail.com>"
               },
               {
-                name: 'Received',
-                value: 'from smtpclient.apple ([2a09:bac5:a6f3:6e::b:243]) by smtp.gmail.com with ESMTPSA id j2-20020a05620a410200b0077d7326c60csm3072951qko.38.2023.11.26.09.45.46 for <events@va.dumas.nyc> (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128); Sun, 26 Nov 2023 09:45:46 -0800 (PST)',
+                "name": "Received",
+                "value": "from smtpclient.apple ([2a09:bac1:76c0:518::b:134]) by smtp.gmail.com with ESMTPSA id jr27-20020a05622a801b00b00410a9dd3d88sm2051qtb.68.2023.11.29.16.55.56 for <events@va.dumas.nyc> (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128); Wed, 29 Nov 2023 16:55:56 -0800 (PST)"
               },
               {
-                name: 'From',
-                value: 'Max Dumas <maltor124@gmail.com>',
+                "name": "From",
+                "value": "Max Dumas <maltor124@gmail.com>"
               },
               {
-                name: 'X-Google-Original-From',
-                value: 'Max Dumas <max@dumas.nyc>',
+                "name": "X-Google-Original-From",
+                "value": "Max Dumas <max@dumas.nyc>"
               },
               {
-                name: 'Content-Type',
-                value: 'multipart/alternative; boundary="Apple-Mail=_0547E371-F069-457F-9D51-476DB5D8ACEE"',
+                "name": "Content-Type",
+                "value": "multipart/alternative; boundary=\"Apple-Mail=_BD1E37A5-E049-4DA1-8AFA-17BC25814CC4\""
               },
               {
-                name: 'X-Priority',
-                value: '3',
+                "name": "Mime-Version",
+                "value": "1.0 (Mac OS X Mail 16.0 \\(3774.200.91.1.1\\))"
               },
               {
-                name: 'Subject',
-                value: 'Fwd: nonsense: 11.24 to 11.30',
+                "name": "Subject",
+                "value": "=?utf-8?Q?Fwd=3A_The_Joy_List=3A_Prophecy_+_Oddity_=F0=9F=8C=9D?="
               },
               {
-                name: 'Date',
-                value: 'Sun, 26 Nov 2023 12:45:35 -0500',
+                "name": "Message-Id",
+                "value": "<EE88C8DB-7CC1-4FEC-A228-1960E6C5E370@dumas.nyc>"
               },
               {
-                name: 'References',
-                value: '<0101018c02801c5c-459b31e0-0c51-4243-943a-a812ef772918-000000@us-west-2.amazonses.com>',
+                "name": "References",
+                "value": "<11dd5bb5b9ad002b5cd296e00.fcee5880ae.20231128004855.a50332992d.a039ffaf@mail116.suw231.rsgsv.net>"
               },
               {
-                name: 'To',
-                value: 'events@va.dumas.nyc',
+                "name": "To",
+                "value": "events@va.dumas.nyc"
               },
               {
-                name: 'Message-Id',
-                value: '<7A414BAB-25C9-431E-B92C-3B303AC0A076@dumas.nyc>',
+                "name": "Date",
+                "value": "Wed, 29 Nov 2023 19:55:46 -0500"
               },
               {
-                name: 'Mime-Version',
-                value: '1.0 (Mac OS X Mail 16.0 \\(3774.200.91.1.1\\))',
-              },
-              {
-                name: 'X-Mailer',
-                value: 'Apple Mail (2.3774.200.91.1.1)',
-              },
+                "name": "X-Mailer",
+                "value": "Apple Mail (2.3774.200.91.1.1)"
+              }
             ],
-            commonHeaders: {
-              returnPath: 'maltor124@gmail.com',
-              from: [
-                'Max Dumas <maltor124@gmail.com>',
+            "commonHeaders": {
+              "returnPath": "maltor124@gmail.com",
+              "from": [
+                "Max Dumas <maltor124@gmail.com>"
               ],
-              date: 'Sun, 26 Nov 2023 12:45:35 -0500',
-              to: [
-                'events@va.dumas.nyc',
+              "date": "Wed, 29 Nov 2023 19:55:46 -0500",
+              "to": [
+                "events@va.dumas.nyc"
               ],
-              messageId: '<7A414BAB-25C9-431E-B92C-3B303AC0A076@dumas.nyc>',
-              subject: 'Fwd: nonsense: 11.24 to 11.30',
-            },
+              "messageId": "<EE88C8DB-7CC1-4FEC-A228-1960E6C5E370@dumas.nyc>",
+              "subject": "Fwd: The Joy List: Prophecy + Oddity 🌝"
+            }
           },
-          receipt: {
-            timestamp: '2023-11-26T17:45:49.412Z',
-            processingTimeMillis: 411,
-            recipients: [
-              'events@va.dumas.nyc',
+          "receipt": {
+            "timestamp": "2023-11-30T00:55:58.359Z",
+            "processingTimeMillis": 510,
+            "recipients": [
+              "events@va.dumas.nyc"
             ],
-            spamVerdict: {
-              status: 'DISABLED',
+            "spamVerdict": {
+              "status": "DISABLED"
             },
-            virusVerdict: {
-              status: 'DISABLED',
+            "virusVerdict": {
+              "status": "DISABLED"
             },
-            spfVerdict: {
-              status: 'PASS',
+            "spfVerdict": {
+              "status": "PASS"
             },
-            dkimVerdict: {
-              status: 'PASS',
+            "dkimVerdict": {
+              "status": "PASS"
             },
-            dmarcVerdict: {
-              status: 'PASS',
+            "dmarcVerdict": {
+              "status": "PASS"
             },
-            action: {
-              type: 'S3',
-              topicArn: 'arn:aws:sns:us-east-1:353161589245:VirtualAssistant-EmailReceiptTopicE401841F-NiXxv4wMScYv',
-              bucketName: 'virtualassistant-emailstoragebucket61c70ce5-8fhnbydqmh43',
-              objectKey: 'ivskgs0mcstjghojqfpsnhf0638m3o2m4g69t801',
-            },
-          },
+            "action": {
+              "type": "S3",
+              "topicArn": "arn:aws:sns:us-east-1:353161589245:VirtualAssistant-EmailReceiptTopicE401841F-NiXxv4wMScYv",
+              "bucketName": "virtualassistant-emailstoragebucket61c70ce5-8fhnbydqmh43",
+              "objectKey": "s1to6rtpigvkiq4tv25hf2dffme2pfmcdqu2s401"
+            }
+          }
         }),
       }),
     },
