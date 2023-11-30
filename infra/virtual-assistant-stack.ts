@@ -69,6 +69,6 @@ export class VirtualAssistantStack extends Stack {
     digestFunction.lambda.addEventSource(new SqsEventSource(queue));
 
     const emailDigestFunctionSecret = secretsmanager.Secret.fromSecretNameV2(this, 'EmailDigestFunctionOpenAiApiKey', 'EmailDigestFunctionOpenAiApiKey');
-    digestFunction.lambda.addEnvironment('OPENAI_API_KEY', emailDigestFunctionSecret.secretValue.toString())
+    digestFunction.lambda.addEnvironment('OPENAI_API_KEY', emailDigestFunctionSecret.secretValue.toString());
   }
 }

@@ -32,7 +32,7 @@
     "@types/node": "20",
     "aws-cdk": "2.111.0",
     "bun-types": "^1",
-    "eslint": "^8",
+    "eslint": "8.50.0",
     "typescript": "~5"
   }
 }
