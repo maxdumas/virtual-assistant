@@ -22,7 +22,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.98.0",
+    "aws-cdk-lib": "2.111.0",
     "bun": "^1",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^2",
     "@types/node": "20",
-    "aws-cdk": "2.98.0",
+    "aws-cdk": "2.111.0",
     "bun-types": "^1",
     "eslint": "^8",
     "typescript": "~5"

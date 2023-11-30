@@ -15,7 +15,6 @@ import { Readable } from 'node:stream';
 import type { SQSEvent } from 'aws-lambda';
 import { simpleParser } from 'mailparser';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
 import OpenAI from 'openai';
 import type { JSONSchemaType } from 'ajv';
 import Ajv from 'ajv';
@@ -24,9 +23,7 @@ import addFormats from 'ajv-formats';
 const ajv = addFormats(new Ajv());
 
 const openai = new OpenAI();
-const s3 = new S3Client({
-  credentials: fromNodeProviderChain({ profile: 'soteriia' }),
-});
+const s3 = new S3Client();
 
 const ALLOWED_FORWARDERS = new Set([
   'max@dumas.nyc',

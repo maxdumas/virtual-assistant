@@ -2,8 +2,8 @@ import path from 'node:path';
 
 import type { StackProps } from 'aws-cdk-lib';
 import { Duration, Stack } from 'aws-cdk-lib';
-import * as events from 'aws-cdk-lib/aws-events';
-import * as eventsTargets from 'aws-cdk-lib/aws-events-targets';
+import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ses from 'aws-cdk-lib/aws-ses';
 import * as sesActions from 'aws-cdk-lib/aws-ses-actions';
@@ -11,11 +11,10 @@ import * as sns from 'aws-cdk-lib/aws-sns';
 import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import type { Construct } from 'constructs';
-import * as route53 from 'aws-cdk-lib/aws-route53';
-import { SqsEventSource} from 'aws-cdk-lib/aws-lambda-event-sources'
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
-import { BunFun } from './constructs/BunFun';
 import { BunFunLayerStack } from './bun-fun-layer-stack';
+import { BunFun } from './constructs/BunFun';
 
 const lambdaDir = path.join(import.meta.dir, '../packages/functions/src');
 
@@ -68,5 +67,8 @@ export class VirtualAssistantStack extends Stack {
     });
 
     digestFunction.lambda.addEventSource(new SqsEventSource(queue));
+
+    const emailDigestFunctionSecret = secretsmanager.Secret.fromSecretNameV2(this, 'EmailDigestFunctionOpenAiApiKey', 'EmailDigestFunctionOpenAiApiKey');
+    digestFunction.lambda.addEnvironment('OPENAI_API_KEY', emailDigestFunctionSecret.secretValue.toString())
   }
 }
