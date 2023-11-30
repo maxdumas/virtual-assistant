@@ -1,3 +1,16 @@
+/*
+* This function will attempt to render the message to a format usable by Textract, and
+* then run textract on it to (hopefully) get information about everything
+* in that email, even if it's stored in an image.
+
+* Hm, what about links? We should follow those too if we can't get enough
+* information on the page itself... so we'd need to follow links in the
+* email text.
+
+* For each email text, we then ask GPT-4 to summarize it and extract
+* structured information about the event, such as when it is, where it is, a brief description, how much it costs, the link to RSVP, etc.
+*/
+
 import { Readable } from 'node:stream';
 import type { SQSEvent } from 'aws-lambda';
 import { simpleParser } from 'mailparser';
