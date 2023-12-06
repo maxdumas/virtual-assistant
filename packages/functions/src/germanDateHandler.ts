@@ -9,7 +9,7 @@ export async function germanDateHandler(event: APIGatewayEvent) {
     message: 'Event',
     event,
   });
-  const { getGermanDateString } = await import('./dateHelper');
+  const { getGermanDateString } = await import('./dateHelper.js');
   return new Response(`It is about time to have some fun with Bun: ${getGermanDateString(new Date())}`, {
     status: 200,
     headers: {

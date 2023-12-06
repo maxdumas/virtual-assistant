@@ -1,8 +1,8 @@
 import type { StackProps } from 'aws-cdk-lib';
 import { Stack } from 'aws-cdk-lib';
 import type { Construct } from 'constructs';
-import { BunFunLayerStack } from './bun-fun-layer-stack';
-import { BunFunStack } from './bun-fun-stack';
+import { BunFunLayerStack } from './bun-fun-layer-stack.js';
+import { BunFunStack } from './bun-fun-stack.js';
 
 export class BunOven extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {

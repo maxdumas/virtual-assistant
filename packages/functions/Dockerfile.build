@@ -1,0 +1,14 @@
+# Dockerfile used to generate build outputs using 
+
+
+ARG TARGET=bun
+
+FROM oven/bun
+
+COPY package.json .
+
+RUN bun install
+
+COPY src/ .
+
+RUN bun build --target $TARGET --outfile /asset/main.js

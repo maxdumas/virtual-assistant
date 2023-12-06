@@ -187,7 +187,7 @@ describe('emailDigest lambda', async () => {
         Body: createReadStream(new URL('./fixtures/sample_email.txt', import.meta.url)) as any,
       });
 
-      const { handler } = await import('../src/emailDigest');
+      const { handler } = await import('../src/emailDigest.js');
       const result = await handler(mockEvent);
       const text = await result.text();
       expect(result.status).toEqual(200);

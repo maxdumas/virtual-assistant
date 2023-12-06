@@ -3,7 +3,7 @@ import type { StackProps } from 'aws-cdk-lib';
 import { Stack } from 'aws-cdk-lib';
 import type { Construct } from 'constructs';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
-import { BunFun } from './constructs/BunFun';
+import { BunFun } from './constructs/BunFun.js';
 
 const lambdaDir = path.join(import.meta.dir, '../packages/functions/src');
 

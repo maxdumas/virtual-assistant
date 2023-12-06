@@ -32,7 +32,10 @@ export class BunFun extends Construct {
   constructor(scope: Construct, id: string, props: BunFunProps) {
     super(scope, id);
 
-    const projectPath = path.dirname(props.entrypoint);
+    // TODO(maxdumas): Resolve this in a more general way
+    const projectPath = path.resolve(path.dirname(props.entrypoint), '..');
+
+    const relativeEntrypointPath = path.relative(projectPath, props.entrypoint);
 
     this.lambda = new Function(this, 'BunFunction', {
       code: Code.fromAsset(projectPath, {
@@ -41,7 +44,7 @@ export class BunFun extends Construct {
           command: [
             'bash',
             '-c',
-            `bun install && bun build --target ${props.bunConfig?.target ?? 'bun'} --outfile /asset-output/${path.basename(props.entrypoint)}`,
+            `bun install && bun build ${relativeEntrypointPath} --target ${props.bunConfig?.target ?? 'bun'} --outfile /asset-output/${path.basename(props.entrypoint)}`,
           ],
         },
       }),

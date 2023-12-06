@@ -10,6 +10,7 @@ export default await antfu({
       'no-new': 'off',
       'no-console': 'warn',
       'node/prefer-global/process': 'off',
+      'import/extensions': ['error', 'ignorePackages'],
     },
   },
 });

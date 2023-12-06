@@ -1,5 +1,5 @@
 {
-  "app": "bun index.ts",
+  "app": "ts-node --esm index.ts",
   "watch": {
     "include": [
       "**"

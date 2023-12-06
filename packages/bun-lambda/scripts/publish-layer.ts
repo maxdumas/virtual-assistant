@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { BuildCommand } from './build-layer';
+import { BuildCommand } from './build-layer.js';
 
 export class PublishCommand extends BuildCommand {
   static summary = 'Publish a custom Lambda layer for Bun.';

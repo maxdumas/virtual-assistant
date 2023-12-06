@@ -14,10 +14,11 @@ import type { Construct } from 'constructs';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 
-import { BunFunLayerStack } from './bun-fun-layer-stack';
-import { BunFun } from './constructs/BunFun';
+import { BunFun } from './constructs/BunFun.js';
 
-const lambdaDir = path.join(import.meta.dir, '../packages/functions');
+// TODO(maxdumas): Figure out how to shim import.meta.dir here
+// const lambdaDir = path.join(import.meta.dir, '../packages/functions');
+const lambdaDir = path.resolve('./packages/functions');
 
 export class VirtualAssistantStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -74,6 +75,7 @@ export class VirtualAssistantStack extends Stack {
     digestFunction.lambda.addEventSource(new SqsEventSource(queue));
 
     const emailDigestFunctionSecret = secretsmanager.Secret.fromSecretNameV2(this, 'EmailDigestFunctionOpenAiApiKey', 'EmailDigestFunctionOpenAiApiKey');
-    digestFunction.lambda.addEnvironment('OPENAI_API_KEY', emailDigestFunctionSecret.secretValue.toString());
+    // TODO(maxdumas): Use the SecretsManager layer on this lambda to safely use this secret.
+    digestFunction.lambda.addEnvironment('OPENAI_API_KEY', emailDigestFunctionSecret.secretValue.unsafeUnwrap());
   }
 }

@@ -1,4 +1,4 @@
-import { handler } from '../src/emailDigest';
+import { handler } from '../src/emailDigest.js';
 
 const mockEvent = {
   Records: [

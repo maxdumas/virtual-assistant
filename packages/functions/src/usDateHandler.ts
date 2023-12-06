@@ -9,7 +9,7 @@ export async function usDateHandler(_event: APIGatewayEvent) {
     message: 'Event',
     event: _event,
   });
-  const { getUsDateString } = await import('./dateHelper');
+  const { getUsDateString } = await import('./dateHelper.js');
 
   return new Response(`It is about time to have some fun with Bun but in US Time: ${getUsDateString(new Date())}`, {
     status: 200,
