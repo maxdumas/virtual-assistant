@@ -15,10 +15,10 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 import { BunFun } from './constructs/BunFun.js';
+import { BunFunLayerStack } from './bun-fun-layer-stack.js';
+import { getProjectRoot } from './utils.js';
 
-// TODO(maxdumas): Figure out how to shim import.meta.dir here
-// const lambdaDir = path.join(import.meta.dir, '../packages/functions');
-const lambdaDir = path.resolve('./packages/functions');
+const lambdaDir = path.resolve(getProjectRoot()[0], './packages/functions');
 
 export class VirtualAssistantStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -56,20 +56,16 @@ export class VirtualAssistantStack extends Stack {
     });
     topic.addSubscription(new SqsSubscription(queue));
 
-    // const layer = new BunFunLayerStack(this, 'BunFunLayerStack', {
-    //   accountId: this.account, // Or make it '*' to make it public
-    // });
-
-    // TODO(maxdumas): We currently have to import this because it seems like
-    // the layer stack is causing segfaults when we try to run it.
-    const layer = lambda.LayerVersion.fromLayerVersionArn(this, 'BunFunLayer', 'arn:aws:lambda:us-east-1:353161589245:layer:BunFunLayer:1');
+    const layer = new BunFunLayerStack(this, 'BunFunLayerStack', {
+      accountId: this.account, // Or make it '*' to make it public
+    });
 
     // For every email that comes into the queue, we trigger a lambda function
     // to extract events from the email.
     const digestFunction = new BunFun(this, 'EmailDigestFunction', {
       entrypoint: `${lambdaDir}/src/emailDigest.ts`,
       handler: 'emailDigest.handler',
-      bunLayer: layer,
+      bunLayer: layer.layer,
     });
 
     digestFunction.lambda.addEventSource(new SqsEventSource(queue));

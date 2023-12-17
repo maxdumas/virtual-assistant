@@ -9,8 +9,9 @@ import {
   Runtime,
 } from 'aws-cdk-lib/aws-lambda';
 import type { Construct } from 'constructs';
+import { getProjectRoot } from './utils.js';
 
-const dir = path.join(__dirname, '../');
+const dir = getProjectRoot()[0];
 
 export type BunFunLayerStackProps = StackProps & LayerVersionPermission;
 
