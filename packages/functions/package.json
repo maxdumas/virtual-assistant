@@ -15,8 +15,10 @@
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "dateformat": "^5.0.3",
+    "kysely": "^0.26.3",
     "mailparser": "^3.6.5",
-    "openai": "^4.20.0"
+    "openai": "^4.20.0",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "@aws-lambda-powertools/logger": "^1.13.1",
@@ -24,6 +26,7 @@
     "@aws-lambda-powertools/tracer": "^1.13.1",
     "@types/aws-lambda": "8.10.121",
     "@types/mailparser": "^3.4.4",
+    "@types/pg": "^8.10.9",
     "aws-sdk-client-mock": "^3.0.0",
     "vitest": "^0.34.5"
   }

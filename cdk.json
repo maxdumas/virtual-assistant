@@ -1,5 +1,5 @@
 {
-  "app": "ts-node --esm index.ts",
+  "app": "ts-node --esm --require source-map-support/register index.ts",
   "watch": {
     "include": [
       "**"

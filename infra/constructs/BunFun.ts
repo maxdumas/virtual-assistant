@@ -1,15 +1,14 @@
 import path from 'node:path';
 import { Construct } from 'constructs';
-import type { FunctionUrlAuthType, ILayerVersion } from 'aws-cdk-lib/aws-lambda';
-import { Architecture, Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
+import type { FunctionProps, FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
+import { Architecture, Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
 import type * as Bun from 'bun';
-import { CfnOutput, DockerImage } from 'aws-cdk-lib';
+import { CfnOutput, DockerImage, RemovalPolicy } from 'aws-cdk-lib';
 import { AnyPrincipal, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { getProjectRoot } from '../utils.js';
 
-export interface BunFunPropsBase {
+export interface BunFunPropsBase extends Omit<FunctionProps, 'runtime' | 'code'> {
   entrypoint: string
-  handler: string
-  bunLayer: ILayerVersion
   bunConfig?: Omit<Bun.BuildConfig, 'entrypoints' | 'target'> & {
     target: Bun.Target
   }
@@ -27,17 +26,27 @@ export interface BunFunPropsWithoutFunctionUrl extends BunFunPropsBase {
 type BunFunProps = BunFunPropsWithFunctionUrl | BunFunPropsWithoutFunctionUrl;
 
 export class BunFun extends Construct {
-  public lambda!: Function;
+  readonly lambda: Function;
 
   constructor(scope: Construct, id: string, props: BunFunProps) {
     super(scope, id);
 
-    // TODO(maxdumas): Resolve this in a more general way
-    const projectPath = path.resolve(path.dirname(props.entrypoint), '..');
+    const projectPath = getProjectRoot()[0];
 
     const relativeEntrypointPath = path.relative(projectPath, props.entrypoint);
 
+    const layer = new LayerVersion(this, 'BunFunLayer', {
+      description: 'A custom Lambda layer for Bun.',
+      removalPolicy: RemovalPolicy.DESTROY,
+      code: Code.fromAsset(path.join(projectPath, 'bun-lambda-layer.zip')),
+      compatibleArchitectures: [Architecture.X86_64, Architecture.ARM_64],
+      compatibleRuntimes: [Runtime.PROVIDED_AL2],
+      layerVersionName: 'BunFunLayer',
+      license: 'MIT',
+    });
+
     this.lambda = new Function(this, 'BunFunction', {
+      ...props,
       code: Code.fromAsset(projectPath, {
         bundling: {
           image: DockerImage.fromRegistry('oven/bun'),
@@ -50,16 +59,17 @@ export class BunFun extends Construct {
       }),
       handler: props.handler,
       runtime: Runtime.PROVIDED_AL2,
-      layers: [props.bunLayer],
+      layers: [layer],
       architecture: Architecture.ARM_64,
+      allowPublicSubnet: true,
     });
 
-    this.lambda.addToRolePolicy(
-      new PolicyStatement({
-        actions: ['lambda:GetLayerVersion'],
-        resources: [props.bunLayer.layerVersionArn],
-      }),
-    );
+    // this.lambda.addToRolePolicy(
+    //   new PolicyStatement({
+    //     actions: ['lambda:GetLayerVersion'],
+    //     resources: [layer.layerVersionArn],
+    //   }),
+    // );
 
     if (props.functionsUrl) {
       this.lambda.addPermission('InvokeFunctionsUrl', {

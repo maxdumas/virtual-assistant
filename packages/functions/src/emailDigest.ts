@@ -19,11 +19,25 @@ import OpenAI from 'openai';
 import type { JSONSchemaType } from 'ajv';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
+import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
+import { Pool } from 'pg';
+import { Kysely, PostgresDialect } from 'kysely';
+import type { VAEvent } from './types';
+import type { Database } from './db.js';
 
 const ajv = addFormats(new Ajv());
 
 const openai = new OpenAI();
-const s3 = new S3Client();
+const s3 = new S3Client({
+  credentials: fromNodeProviderChain({ profile: 'soteriia' }),
+});
+const db = new Kysely<Database>({
+  dialect: new PostgresDialect({
+    pool: new Pool({
+      connectionString: process.env.DB_CONNECTION_STRING,
+    }),
+  }),
+});
 
 const ALLOWED_FORWARDERS = new Set([
   'max@dumas.nyc',
@@ -32,22 +46,14 @@ const ALLOWED_FORWARDERS = new Set([
   'maltor124@gmail.com',
 ]);
 
-interface Event {
-  location: string
-  start_datetime: Date
-  end_datetime: Date
-  link?: string
-  price?: number
-}
-
 interface EventExtractionResponse {
-  events: Event[]
+  events: VAEvent[]
 }
 
-// TODO(maxdumas): Get the typing for this correct
 const eventExtractionSchema: JSONSchemaType<EventExtractionResponse> = {
   additionalProperties: false,
   type: 'object',
+  required: ['events'],
   properties: {
     events: {
       type: 'array',
@@ -58,45 +64,48 @@ const eventExtractionSchema: JSONSchemaType<EventExtractionResponse> = {
             type: 'string',
             description: 'Event name',
           },
+          description: {
+            type: 'string',
+            description: 'One sentence summary of the event. Tell me what it is and why I should go. What\'s exciting about this event?',
+          },
           location: {
             type: 'string',
             description: 'The location of the event. Provide a full address if possible.',
           },
-          start_datetime: {
+          startDateTime: {
             type: 'string',
             description: 'When the event begins.',
             format: 'date-time',
           },
-          end_datetime: {
+          endDateTime: {
             type: 'string',
-            description: 'When the event ends. May not be available. Generally assume that this is one hour after the start_datetime value if it cannot be explicitly determined.',
+            description: 'When the event ends. May not be available. Generally assume that this is one hour after the startDateTime value if it cannot be explicitly determined.',
             format: 'date-time',
           },
           link: {
             type: 'string',
             description: 'RSVP URL, website, tickets, or whatever is needed to actually follow through on the event.',
+            nullable: true,
             format: 'uri',
           },
           price: {
             type: 'number',
             description: 'Price, in USD, of the event. If free, use 0.',
+            nullable: true,
             minimum: 0,
-          },
-          description: {
-            type: 'string',
-            description: 'One sentence summary of the event. Tell me what it is and why I should go. What\'s exciting about this event?',
           },
         },
         required: [
           'name',
-          'start_datetime',
-          'end_datetime',
           'description',
+          'location',
+          'startDateTime',
+          'endDateTime',
         ],
       },
     },
   },
-} as any;
+};
 
 const validateEventExtraction = ajv.compile(eventExtractionSchema);
 
@@ -117,7 +126,7 @@ END EMAIL MESSAGE`;
 };
 
 export async function handler(event: SQSEvent) {
-  const allEvents: Event[] = [];
+  const allEvents: VAEvent[] = [];
 
   for (const record of event.Records) {
     const sesEvent = JSON.parse(record.body);
@@ -140,10 +149,13 @@ export async function handler(event: SQSEvent) {
     if (!s3Response.Body)
       throw new Error(`S3 object at ${JSON.stringify(messageContentS3Location)} contained nothing.`);
 
-    const parsed = await simpleParser(Readable.fromWeb(s3Response.Body.transformToWebStream()));
+    // TODO(maxdumas): Let's make this code less gross at some point.
+    const parsed = await simpleParser(Readable.fromWeb(s3Response.Body.transformToWebStream() as any));
 
     if (!parsed.text)
       continue;
+
+    console.log(parsed.text);
 
     const content = extractEventsPrompt(parsed.text);
     console.log(content);
@@ -167,6 +179,8 @@ export async function handler(event: SQSEvent) {
     const { events } = extraction;
     allEvents.push(...events);
   }
+
+  await db.insertInto('events').values(allEvents).executeTakeFirstOrThrow();
 
   return new Response(JSON.stringify(allEvents), {
     status: 200,
