@@ -145,6 +145,8 @@ export default {
         Key: message.receipt.action.objectKey,
       };
 
+      console.log(`Loading message at ${messageContentS3Location}`);
+
       const s3Response = await s3.send(new GetObjectCommand(messageContentS3Location));
 
       if (!s3Response.Body)
@@ -152,6 +154,7 @@ export default {
 
       const messageBody = await s3Response.Body.transformToString();
 
+      console.log('Message body loaded.');
       console.log(messageBody);
 
       const parsed = await simpleParser(messageBody);
@@ -159,10 +162,14 @@ export default {
       if (!parsed.text)
         continue;
 
+      console.log('Message body parsed');
       console.log(parsed.text);
 
       const content = extractEventsPrompt(parsed.text);
+
+      console.log('Event extraction prompt generated');
       console.log(content);
+
       const openAiResponse = await openai.chat.completions.create({
         messages: [{ role: 'user', content }],
         model: 'gpt-4-1106-preview',
@@ -170,6 +177,7 @@ export default {
       });
       const openAiMessage = openAiResponse.choices[0].message.content;
 
+      console.log('Raw event extraction received.');
       console.log(openAiMessage);
 
       if (!openAiMessage)
@@ -183,11 +191,16 @@ export default {
       const { events } = extraction;
       allEvents.push(...events);
 
+      console.log('Events extracted.');
+      console.log(events);
+
       await db.insertInto('public.events').values(events.map(e => ({
         ...e,
         startDateTime: new Date(e.startDateTime),
         endDateTime: new Date(e.endDateTime),
       }))).execute();
+
+      console.log('All events inserted into database.');
     }
 
     return new Response(JSON.stringify(allEvents), {
