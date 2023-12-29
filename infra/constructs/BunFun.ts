@@ -51,7 +51,7 @@ export class BunFun extends Construct {
           command: [
             'bash',
             '-c',
-            `bun install && bun build ${relativeEntrypointPath} -e '@aws-sdk/*' --target ${target} --outfile /asset-output/${path.basename(props.entrypoint, '.ts')}${target === 'bun' ? '.ts' : '.mjs'}`,
+            `bun install && bun build ${relativeEntrypointPath} --target ${target} --outfile /asset-output/${path.basename(props.entrypoint, '.ts')}${target === 'bun' ? '.ts' : '.mjs'}`,
           ],
         },
       }),
@@ -65,7 +65,7 @@ export class BunFun extends Construct {
       // Target is bun, so we need to add the bun runtime. We expect it to have
       // already been published into the account. See here for how to do so:
       // https://github.com/oven-sh/bun/tree/1a2643520b216c4c95b7543ed62d4fed30882ce3/packages/bun-lambda
-      const layer = LayerVersion.fromLayerVersionArn(this, 'Layer', 'arn:aws:lambda:us-east-1:353161589245:layer:bun:1');
+      const layer = LayerVersion.fromLayerVersionArn(this, 'Layer', 'arn:aws:lambda:us-east-1:353161589245:layer:bun:2');
       this.lambda.addLayers(layer);
       this.lambda.addToRolePolicy(
         new PolicyStatement({

@@ -11,8 +11,8 @@ export interface VAEventsTable {
   name: string
   description: string
   location: string
-  startDateTime: Date
-  endDateTime: Date
+  start_date_time: Date
+  end_date_time: Date
   link: string | null
   price: number | null
 }

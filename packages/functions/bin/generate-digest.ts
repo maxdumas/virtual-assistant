@@ -172,4 +172,5 @@ const request = new Request({
   body: JSON.stringify({ event: mockEvent }),
 });
 
+// eslint-disable-next-line no-console
 console.log(await fn.handler(request));

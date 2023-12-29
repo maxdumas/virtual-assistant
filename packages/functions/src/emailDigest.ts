@@ -12,7 +12,7 @@
 */
 
 import type { SQSEvent } from 'aws-lambda';
-import { simpleParser } from 'mailparser';
+import PostalMime from 'postal-mime';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import OpenAI from 'openai';
 import type { JSONSchemaType } from 'ajv';
@@ -21,7 +21,7 @@ import addFormats from 'ajv-formats';
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
 import type { VAEvent } from './types';
-import type { Database, VAEventsTable } from './db.js';
+import type { Database } from './db.js';
 
 const ajv = addFormats(new Ajv());
 
@@ -35,6 +35,7 @@ const db = new Kysely<Database>({
     }),
   }),
 });
+const emailParser = new PostalMime();
 
 const ALLOWED_FORWARDERS = new Set([
   'max@dumas.nyc',
@@ -107,8 +108,7 @@ const eventExtractionSchema: JSONSchemaType<EventExtractionResponse> = {
 const validateEventExtraction = ajv.compile(eventExtractionSchema);
 
 function extractEventsPrompt(content: string) {
-  return `
-Extract from me essential info about the events that are contained in the following email message. The information should adhere to the following JSON schema:
+  return `Extract for me essential info about the events that are contained in the following email message. The information should adhere to the following JSON schema:
 
 ${JSON.stringify(eventExtractionSchema)}
 
@@ -124,8 +124,7 @@ END EMAIL MESSAGE`;
 
 export default {
   async handler(request: Request): Promise<Response> {
-    const requestBody = await request.json();
-    const event: SQSEvent = requestBody.event;
+    const { event } = await request.json() as { event: SQSEvent };
 
     const allEvents: VAEvent[] = [];
 
@@ -157,7 +156,7 @@ export default {
       console.log('Message body loaded.');
       console.log(messageBody);
 
-      const parsed = await simpleParser(messageBody);
+      const parsed = await emailParser.parse(messageBody);
 
       if (!parsed.text)
         continue;
@@ -194,10 +193,16 @@ export default {
       console.log('Events extracted.');
       console.log(events);
 
+      // TODO(maxdumas): Can we make this mapping more automatic? Is that
+      // desirable?
       await db.insertInto('public.events').values(events.map(e => ({
-        ...e,
-        startDateTime: new Date(e.startDateTime),
-        endDateTime: new Date(e.endDateTime),
+        name: e.name,
+        description: e.description,
+        link: e.link,
+        location: e.location,
+        price: e.price,
+        start_date_time: new Date(e.startDateTime),
+        end_date_time: new Date(e.endDateTime),
       }))).execute();
 
       console.log('All events inserted into database.');
