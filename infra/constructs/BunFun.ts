@@ -3,7 +3,7 @@ import { Construct } from 'constructs';
 import type { FunctionProps, FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { Architecture, Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
 import type * as Bun from 'bun';
-import { CfnOutput, DockerImage, RemovalPolicy } from 'aws-cdk-lib';
+import { CfnOutput, DockerImage } from 'aws-cdk-lib';
 import { AnyPrincipal, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { getProjectRoot } from '../utils.js';
 
@@ -25,6 +25,12 @@ export interface BunFunPropsWithoutFunctionUrl extends BunFunPropsBase {
 
 type BunFunProps = BunFunPropsWithFunctionUrl | BunFunPropsWithoutFunctionUrl;
 
+/**
+ * A Lambda function that is bundled by (and optionally run by) Bun. If the
+ * build target is set to bun (the default), then a layer containing the bun
+ * runtime will be published. If the runtime is node, then Bun will just be used
+ * to generate a bundle.
+ */
 export class BunFun extends Construct {
   readonly lambda: Function;
 
@@ -35,15 +41,7 @@ export class BunFun extends Construct {
 
     const relativeEntrypointPath = path.relative(projectPath, props.entrypoint);
 
-    const layer = new LayerVersion(this, 'BunFunLayer', {
-      description: 'A custom Lambda layer for Bun.',
-      removalPolicy: RemovalPolicy.DESTROY,
-      code: Code.fromAsset(path.join(projectPath, 'bun-lambda-layer.zip')),
-      compatibleArchitectures: [Architecture.X86_64, Architecture.ARM_64],
-      compatibleRuntimes: [Runtime.PROVIDED_AL2],
-      layerVersionName: 'BunFunLayer',
-      license: 'MIT',
-    });
+    const { target = 'bun' } = props.bunConfig ?? {};
 
     this.lambda = new Function(this, 'BunFunction', {
       ...props,
@@ -53,23 +51,29 @@ export class BunFun extends Construct {
           command: [
             'bash',
             '-c',
-            `bun install && bun build ${relativeEntrypointPath} --target ${props.bunConfig?.target ?? 'bun'} --outfile /asset-output/${path.basename(props.entrypoint)}`,
+            `bun install && bun build ${relativeEntrypointPath} -e '@aws-sdk/*' --target ${target} --outfile /asset-output/${path.basename(props.entrypoint, '.ts')}${target === 'bun' ? '.ts' : '.mjs'}`,
           ],
         },
       }),
       handler: props.handler,
-      runtime: Runtime.PROVIDED_AL2,
-      layers: [layer],
+      runtime: target === 'bun' ? Runtime.PROVIDED_AL2 : Runtime.NODEJS_20_X,
       architecture: Architecture.ARM_64,
       allowPublicSubnet: true,
     });
 
-    // this.lambda.addToRolePolicy(
-    //   new PolicyStatement({
-    //     actions: ['lambda:GetLayerVersion'],
-    //     resources: [layer.layerVersionArn],
-    //   }),
-    // );
+    if (target === 'bun') {
+      // Target is bun, so we need to add the bun runtime. We expect it to have
+      // already been published into the account. See here for how to do so:
+      // https://github.com/oven-sh/bun/tree/1a2643520b216c4c95b7543ed62d4fed30882ce3/packages/bun-lambda
+      const layer = LayerVersion.fromLayerVersionArn(this, 'Layer', 'arn:aws:lambda:us-east-1:353161589245:layer:bun:1');
+      this.lambda.addLayers(layer);
+      this.lambda.addToRolePolicy(
+        new PolicyStatement({
+          actions: ['lambda:GetLayerVersion'],
+          resources: [layer.layerVersionArn],
+        }),
+      );
+    }
 
     if (props.functionsUrl) {
       this.lambda.addPermission('InvokeFunctionsUrl', {

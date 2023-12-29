@@ -13,7 +13,7 @@ export class VaStack extends Stack {
     const { env } = props;
 
     const { vpc } = new VaVpcStack(this, 'VpcStack', { env });
-    const { topic } = new VaEmailRoutingStack(this, 'EmailRoutingStack', { env });
+    const { topic, bucket } = new VaEmailRoutingStack(this, 'EmailRoutingStack', { env });
     const { dbConnectionString } = new VaDatabaseStack(this, 'DatabaseStack', { vpc, env });
 
     new VaEmailProcessingStack(this, 'EmailProcessingStack', {
@@ -21,6 +21,7 @@ export class VaStack extends Stack {
       vpc,
       dbConnectionString,
       topic,
+      bucket,
     });
   }
 }

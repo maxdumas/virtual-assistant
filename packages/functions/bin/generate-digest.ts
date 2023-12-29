@@ -1,4 +1,4 @@
-import { handler } from '../src/emailDigest.js';
+import fn from '../src/emailDigest.js';
 
 const mockEvent = {
   Records: [
@@ -157,8 +157,8 @@ const mockEvent = {
             action: {
               type: 'S3',
               topicArn: 'arn:aws:sns:us-east-1:353161589245:VirtualAssistant-EmailReceiptTopicE401841F-NiXxv4wMScYv',
-              bucketName: 'virtualassistant-emailstoragebucket61c70ce5-8fhnbydqmh43',
-              objectKey: 's1to6rtpigvkiq4tv25hf2dffme2pfmcdqu2s401',
+              bucketName: 'virtualassistantstackemai-emailstoragebucket61c70c-vv9g4u8i4boy',
+              objectKey: '8t27i6hb5kig9qhbk9bge9gt0vj5d9sv3e4hm981',
             },
           },
         }),
@@ -167,4 +167,9 @@ const mockEvent = {
   ],
 };
 
-console.log(await handler(mockEvent));
+const request = new Request({
+  url: 'http://localhost',
+  body: JSON.stringify({ event: mockEvent }),
+});
+
+console.log(await fn.handler(request));

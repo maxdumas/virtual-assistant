@@ -54,7 +54,7 @@ export class VaDatabaseStack extends Stack {
 
     const secret = db.secret!;
 
-    this.dbConnectionString = `postgres://${secret.secretValueFromJson('username').unsafeUnwrap()}:${secret.secretValueFromJson('password').unsafeUnwrap()}@${db.clusterEndpoint.socketAddress}/va`;
+    this.dbConnectionString = `postgres://${secret.secretValueFromJson('username').unsafeUnwrap()}:${secret.secretValueFromJson('password').unsafeUnwrap()}@${db.clusterEndpoint.socketAddress}/postgres`;
     this.db = db;
   }
 }

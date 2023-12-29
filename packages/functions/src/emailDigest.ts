@@ -11,7 +11,6 @@
 * structured information about the event, such as when it is, where it is, a brief description, how much it costs, the link to RSVP, etc.
 */
 
-import { Readable } from 'node:stream';
 import type { SQSEvent } from 'aws-lambda';
 import { simpleParser } from 'mailparser';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
@@ -19,19 +18,17 @@ import OpenAI from 'openai';
 import type { JSONSchemaType } from 'ajv';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
 import type { VAEvent } from './types';
-import type { Database } from './db.js';
+import type { Database, VAEventsTable } from './db.js';
 
 const ajv = addFormats(new Ajv());
 
 const openai = new OpenAI();
-const s3 = new S3Client({
-  credentials: fromNodeProviderChain({ profile: 'soteriia' }),
-});
+const s3 = new S3Client();
 const db = new Kysely<Database>({
+  log: ['query', 'error'],
   dialect: new PostgresDialect({
     pool: new Pool({
       connectionString: process.env.DB_CONNECTION_STRING,
@@ -125,67 +122,79 @@ ${content}
 END EMAIL MESSAGE`;
 };
 
-export async function handler(event: SQSEvent) {
-  const allEvents: VAEvent[] = [];
+export default {
+  async handler(request: Request): Promise<Response> {
+    const requestBody = await request.json();
+    const event: SQSEvent = requestBody.event;
 
-  for (const record of event.Records) {
-    const sesEvent = JSON.parse(record.body);
-    const message = JSON.parse(sesEvent.Message);
+    const allEvents: VAEvent[] = [];
 
-    // Only allow forwards from a pre-approved address.
-    if (!ALLOWED_FORWARDERS.has(message.mail.source))
-      throw new Error(`Will not parse email from unapproved source ${message.mail.source}`);
+    for (const record of event.Records) {
+      const sesEvent = JSON.parse(record.body);
+      const message = JSON.parse(sesEvent.Message);
 
-    if (message.receipt.action.type !== 'S3')
-      throw new Error('Unexpected incoming action type');
+      // Only allow forwards from a pre-approved address.
+      if (!ALLOWED_FORWARDERS.has(message.mail.source))
+        throw new Error(`Will not parse email from unapproved source ${message.mail.source}`);
 
-    const messageContentS3Location = {
-      Bucket: message.receipt.action.bucketName,
-      Key: message.receipt.action.objectKey,
-    };
+      if (message.receipt.action.type !== 'S3')
+        throw new Error('Unexpected incoming action type');
 
-    const s3Response = await s3.send(new GetObjectCommand(messageContentS3Location));
+      const messageContentS3Location = {
+        Bucket: message.receipt.action.bucketName,
+        Key: message.receipt.action.objectKey,
+      };
 
-    if (!s3Response.Body)
-      throw new Error(`S3 object at ${JSON.stringify(messageContentS3Location)} contained nothing.`);
+      const s3Response = await s3.send(new GetObjectCommand(messageContentS3Location));
 
-    // TODO(maxdumas): Let's make this code less gross at some point.
-    const parsed = await simpleParser(Readable.fromWeb(s3Response.Body.transformToWebStream() as any));
+      if (!s3Response.Body)
+        throw new Error(`S3 object at ${JSON.stringify(messageContentS3Location)} contained nothing.`);
 
-    if (!parsed.text)
-      continue;
+      const messageBody = await s3Response.Body.transformToString();
 
-    console.log(parsed.text);
+      console.log(messageBody);
 
-    const content = extractEventsPrompt(parsed.text);
-    console.log(content);
-    const openAiResponse = await openai.chat.completions.create({
-      messages: [{ role: 'user', content }],
-      model: 'gpt-4-1106-preview',
-      response_format: { type: 'json_object' },
+      const parsed = await simpleParser(messageBody);
+
+      if (!parsed.text)
+        continue;
+
+      console.log(parsed.text);
+
+      const content = extractEventsPrompt(parsed.text);
+      console.log(content);
+      const openAiResponse = await openai.chat.completions.create({
+        messages: [{ role: 'user', content }],
+        model: 'gpt-4-1106-preview',
+        response_format: { type: 'json_object' },
+      });
+      const openAiMessage = openAiResponse.choices[0].message.content;
+
+      console.log(openAiMessage);
+
+      if (!openAiMessage)
+        throw new Error('Failed to get a response from OpenAI!');
+
+      const extraction = JSON.parse(openAiMessage);
+
+      if (!validateEventExtraction(extraction))
+        throw new Error('OpenAI response was not a valid set of events.');
+
+      const { events } = extraction;
+      allEvents.push(...events);
+
+      await db.insertInto('public.events').values(events.map(e => ({
+        ...e,
+        startDateTime: new Date(e.startDateTime),
+        endDateTime: new Date(e.endDateTime),
+      }))).execute();
+    }
+
+    return new Response(JSON.stringify(allEvents), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-    const openAiMessage = openAiResponse.choices[0].message.content;
-
-    console.log(openAiMessage);
-
-    if (!openAiMessage)
-      throw new Error('Failed to get a response from OpenAI!');
-
-    const extraction = JSON.parse(openAiMessage);
-
-    if (!validateEventExtraction(extraction))
-      throw new Error('OpenAI response was not a valid set of events.');
-
-    const { events } = extraction;
-    allEvents.push(...events);
-  }
-
-  await db.insertInto('events').values(allEvents).executeTakeFirstOrThrow();
-
-  return new Response(JSON.stringify(allEvents), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+  },
+};
